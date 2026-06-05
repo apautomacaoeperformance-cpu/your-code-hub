@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import appAndroid from "@/assets/app-android.png";
 import appIos from "@/assets/app-ios.png";
+import aureaLogo from "@/assets/aurea-logo.png.asset.json";
 
 function formatLastUpdate(date: Date, lang: string) {
   const options: Intl.DateTimeFormatOptions = {
