@@ -1,0 +1,1 @@
+DROP TRIGGER IF EXISTS trg_gerar_cotas ON public.debentures;

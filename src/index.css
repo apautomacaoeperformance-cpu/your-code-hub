@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Securitizadora — clean modern light theme */
+    --background: 210 20% 98%;
+    --foreground: 222 35% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 35% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 35% 12%;
+
+    /* Deep finance navy */
+    --primary: 215 65% 22%;
+    --primary-foreground: 210 40% 98%;
+    --primary-glow: 215 70% 35%;
+
+    --secondary: 210 30% 95%;
+    --secondary-foreground: 215 50% 18%;
+
+    --muted: 210 25% 95%;
+    --muted-foreground: 215 16% 45%;
+
+    /* Emerald accent for positive metrics */
+    --accent: 158 64% 42%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 158 64% 42%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 25% 90%;
+    --input: 215 25% 90%;
+    --ring: 215 65% 22%;
+
+    --radius: 0.75rem;
+
+    /* Gradients & shadows */
+    --gradient-primary: linear-gradient(135deg, hsl(215 65% 22%), hsl(215 70% 35%));
+    --gradient-subtle: linear-gradient(180deg, hsl(210 30% 98%), hsl(210 25% 95%));
+    --gradient-accent: linear-gradient(135deg, hsl(158 64% 42%), hsl(168 76% 42%));
+    --shadow-sm: 0 1px 2px 0 hsl(215 35% 15% / 0.04);
+    --shadow-md: 0 4px 16px -4px hsl(215 35% 15% / 0.08);
+    --shadow-lg: 0 12px 40px -12px hsl(215 50% 20% / 0.18);
+    --shadow-glow: 0 0 0 1px hsl(215 65% 22% / 0.08), 0 8px 24px -8px hsl(215 65% 22% / 0.2);
+
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Sidebar */
+    --sidebar-background: 215 50% 14%;
+    --sidebar-foreground: 210 30% 88%;
+    --sidebar-primary: 158 64% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 45% 20%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 40% 22%;
+    --sidebar-ring: 158 64% 42%;
+  }
+
+  .dark {
+    --background: 215 35% 8%;
+    --foreground: 210 30% 95%;
+    --card: 215 35% 11%;
+    --card-foreground: 210 30% 95%;
+    --popover: 215 35% 11%;
+    --popover-foreground: 210 30% 95%;
+    --primary: 158 64% 42%;
+    --primary-foreground: 215 50% 10%;
+    --secondary: 215 30% 16%;
+    --secondary-foreground: 210 30% 95%;
+    --muted: 215 30% 16%;
+    --muted-foreground: 215 16% 65%;
+    --accent: 158 64% 42%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 30% 18%;
+    --input: 215 30% 18%;
+    --ring: 158 64% 42%;
+    --success: 158 64% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --gradient-primary: linear-gradient(135deg, hsl(215 50% 14%), hsl(215 55% 22%));
+    --gradient-subtle: linear-gradient(180deg, hsl(215 35% 8%), hsl(215 35% 11%));
+    --gradient-accent: linear-gradient(135deg, hsl(158 64% 42%), hsl(168 76% 42%));
+    --sidebar-background: 215 40% 10%;
+    --sidebar-foreground: 210 30% 88%;
+    --sidebar-primary: 158 64% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 35% 16%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 35% 18%;
+    --sidebar-ring: 158 64% 42%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Sidebar scrollbar matches sidebar palette */
+  [data-sidebar="sidebar"] {
+    scrollbar-color: hsl(var(--sidebar-accent)) hsl(var(--sidebar-background));
+    scrollbar-width: thin;
+  }
+  [data-sidebar="sidebar"] *::-webkit-scrollbar,
+  [data-sidebar="sidebar"]::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  [data-sidebar="sidebar"] *::-webkit-scrollbar-track,
+  [data-sidebar="sidebar"]::-webkit-scrollbar-track {
+    background: hsl(var(--sidebar-background));
+  }
+  [data-sidebar="sidebar"] *::-webkit-scrollbar-thumb,
+  [data-sidebar="sidebar"]::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--sidebar-accent));
+    border-radius: 8px;
+    border: 2px solid hsl(var(--sidebar-background));
+  }
+  [data-sidebar="sidebar"] *::-webkit-scrollbar-thumb:hover,
+  [data-sidebar="sidebar"]::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--sidebar-border));
+  }
+  ::-webkit-scrollbar-button,
+  ::-webkit-scrollbar-button:single-button {
+    background-color: hsl(var(--background)) !important;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: block;
+    height: 12px;
+    width: 12px;
+    border: none;
+  }
+  ::-webkit-scrollbar-button:vertical:decrement {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path d='M1 5l3-3 3 3' stroke='%23999' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  }
+  ::-webkit-scrollbar-button:vertical:increment {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path d='M1 3l3 3 3-3' stroke='%23999' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  }
+  ::-webkit-scrollbar-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path d='M5 1L2 4l3 3' stroke='%23999' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  }
+  ::-webkit-scrollbar-button:horizontal:increment {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'><path d='M3 1l3 3-3 3' stroke='%23999' stroke-width='1.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  }
+}
