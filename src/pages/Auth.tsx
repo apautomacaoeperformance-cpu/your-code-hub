@@ -10,8 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Landmark, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
-import logoAP from "@/assets/logo-ap-horizontal.png";
-import logoJHL from "@/assets/logo-jhl.png";
 import appAndroid from "@/assets/app-android.png";
 import appIos from "@/assets/app-ios.png";
 
@@ -77,11 +75,6 @@ export default function Auth() {
   return (
     <div className="relative flex min-h-screen items-start justify-center bg-gradient-subtle p-4 pt-6">
       <div className="w-full max-w-sm">
-        <div className="mt-4 mb-4 text-center">
-          <div className="inline-flex items-center justify-center">
-            <img src={logoJHL} alt="JHL Securitizadora" className="h-28 w-auto" />
-          </div>
-        </div>
 
         <Card className="border-border/60 shadow-elegant">
           <CardHeader className="text-center pt-4 pb-2">
@@ -139,21 +132,6 @@ export default function Auth() {
         </a>
       </div>
 
-      <div className="fixed bottom-3 right-6 flex flex-col items-center gap-1 max-sm:right-3">
-        <span className="text-[9px] font-medium text-muted-foreground">Desenvolvido por</span>
-        <a
-          href="https://automacaoeperformance.com.br"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="opacity-80 transition-opacity hover:opacity-100"
-        >
-          <img
-            src={logoAP}
-            alt="AP Automação & Performance"
-            className="max-h-[28px] w-auto"
-          />
-        </a>
-      </div>
 
       {lastUpdate && (
         <div className="fixed bottom-3 left-6 max-sm:left-3">
