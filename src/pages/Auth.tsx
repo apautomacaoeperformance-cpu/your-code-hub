@@ -10,8 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Landmark, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
-import logoAP from "@/assets/logo-ap-horizontal.png";
-import logoJHL from "@/assets/logo-jhl.png";
 import appAndroid from "@/assets/app-android.png";
 import appIos from "@/assets/app-ios.png";
 
