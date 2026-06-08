@@ -195,8 +195,8 @@ export default function Calculadora() {
     doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, pageW, 26, "F");
     try {
-      // Logo proporcional ~ 162x60 -> 32x12mm
-      doc.addImage(jhlLogo, "PNG", pageW - margin - 28, 7, 28, 11);
+      // Logo AUREA (monograma quadrado)
+      doc.addImage(jhlLogo, "PNG", pageW - margin - 16, 6, 16, 16);
     } catch (e) {
       console.warn("Falha ao inserir logo no PDF", e);
     }

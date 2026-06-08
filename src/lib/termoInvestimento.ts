@@ -46,7 +46,7 @@ function pageHeader(doc: jsPDF) {
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(15);
   doc.setFont("helvetica", "bold");
-  doc.text("JHL SECURITIZADORA S/A", PAGE_MARGIN, 12);
+  doc.text("AUREA SECURITIZADORA S/A", PAGE_MARGIN, 12);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   // Removido título secundário do cabeçalho
@@ -193,7 +193,7 @@ function renderSignature(doc: jsPDF, contentY: number, dataY: number, nome: stri
   doc.line(w / 4 - lineW / 2, y, w / 4 + lineW / 2, y);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
-  doc.text("JHL SECURITIZADORA S/A", w / 4, y + 5, { align: "center" });
+  doc.text("AUREA SECURITIZADORA S/A", w / 4, y + 5, { align: "center" });
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(90);

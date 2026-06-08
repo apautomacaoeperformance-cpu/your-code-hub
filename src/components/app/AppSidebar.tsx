@@ -99,7 +99,7 @@ export function AppSidebar() {
       <SidebarHeader className="h-14 border-b border-sidebar-border px-3 py-0 flex-row items-center justify-center">
         <div className="flex items-center justify-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center">
-            <img src={logoIcon} alt="JHL" className="h-8 w-auto object-contain" />
+            <img src={logoIcon} alt="AUREA" className="h-8 w-auto object-contain" />
           </div>
           {!collapsed && (
             <div className="flex flex-col leading-tight">

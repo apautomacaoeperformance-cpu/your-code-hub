@@ -496,14 +496,14 @@ export default function DebentureDetalhe() {
     doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, pageW, 28, "F");
     try {
-      doc.addImage(jhlLogo, "PNG", pageW - 14 - 28, 8, 28, 11);
+      doc.addImage(jhlLogo, "PNG", pageW - 14 - 16, 6, 16, 16);
     } catch (e) {
       console.warn("Falha ao inserir logo no PDF", e);
     }
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
-    doc.text("JHL SECURITIZADORA", 14, 12);
+    doc.text("AUREA SECURITIZADORA", 14, 12);
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.text("Relatório de Debênture", 14, 19);
@@ -639,14 +639,14 @@ export default function DebentureDetalhe() {
     doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, pageW, 28, "F");
     try {
-      doc.addImage(jhlLogo, "PNG", pageW - 14 - 28, 8, 28, 11);
+      doc.addImage(jhlLogo, "PNG", pageW - 14 - 16, 6, 16, 16);
     } catch (e) {
       console.warn("Falha ao inserir logo no PDF", e);
     }
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
-    doc.text("JHL SECURITIZADORA", 14, 12);
+    doc.text("AUREA SECURITIZADORA", 14, 12);
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.text("Informações Detalhadas da Debênture", 14, 19);

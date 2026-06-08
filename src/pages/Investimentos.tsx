@@ -345,27 +345,27 @@ export default function Investimentos() {
       doc.setFillColor(255, 255, 255);
       doc.rect(0, 0, pageW, 28, "F");
       try {
-        doc.addImage(jhlLogo, "PNG", pageW - 14 - 28, 8, 28, 11);
+        doc.addImage(jhlLogo, "PNG", pageW - 14 - 16, 6, 16, 16);
       } catch (e) {
         console.warn("Falha ao inserir logo no PDF", e);
       }
       doc.setTextColor(15, 23, 42);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("JHL SECURITIZADORA", 14, 12);
+      doc.text("AUREA SECURITIZADORA", 14, 12);
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
       doc.text(t("pages.investimentos"), 14, 19);
 
-      // Aviso (dados do dia anterior) — caixa azul, igual a da tela
+      // Aviso (dados do dia anterior) — caixa marrom, igual a da tela
       const noticeY = 24;
       const noticeH = 9;
-      doc.setFillColor(239, 246, 255);
-      doc.setDrawColor(191, 219, 254);
+      doc.setFillColor(241, 231, 217);
+      doc.setDrawColor(216, 196, 166);
       doc.roundedRect(14, noticeY, pageW - 28, noticeH, 2, 2, "FD");
-      doc.setDrawColor(30, 58, 138);
+      doc.setDrawColor(91, 58, 31);
       doc.circle(20, noticeY + noticeH / 2, 1.8, "S");
-      doc.setTextColor(30, 58, 138);
+      doc.setTextColor(91, 58, 31);
       doc.setFontSize(8);
       doc.setFont("helvetica", "bold");
       doc.text("i", 20, noticeY + noticeH / 2 + 1.2, { align: "center" });
@@ -520,7 +520,7 @@ export default function Investimentos() {
         </Button>
       </div>
 
-      <div className="flex items-center gap-2 rounded-md border border-purple-200 bg-purple-50 px-4 py-2.5 text-sm font-medium text-purple-900 dark:border-purple-900/40 dark:bg-purple-950/40 dark:text-purple-200">
+      <div className="flex items-center gap-2 rounded-md border border-[#d8c4a6] bg-[#f1e7d9] px-4 py-2.5 text-sm font-medium text-[#5b3a1f] dark:border-[#5b3a1f]/40 dark:bg-[#3a2616]/40 dark:text-[#e3cba9]">
         <Info className="h-4 w-4 shrink-0" />
         <span>{t("investimentos.previousDayNotice")}</span>
       </div>

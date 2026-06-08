@@ -98,7 +98,7 @@ export default {
     confirmDelete: "Are you sure you want to delete?",
   },
   sidebar: {
-    brand: "JHL SECURITIZADORA",
+    brand: "AUREA SECURITIZADORA",
     tagline: "Credit platform",
     dashboard: "Dashboard",
     investimentos: "Investments",
@@ -201,7 +201,7 @@ export default {
     neverUpdated: "Never synced",
   },
   auth: {
-    title: "JHL SECURITIZADORA S/A",
+    title: "AUREA SECURITIZADORA S/A",
     access: "Access platform",
     email: "Email",
     password: "Password",

@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import appAndroid from "@/assets/app-android.png";
 import appIos from "@/assets/app-ios.png";
-import aureaLogo from "@/assets/aurea-logo-transparent.png.asset.json";
+import aureaLogo from "@/assets/aurea-logo.png";
 
 function formatLastUpdate(date: Date, lang: string) {
   const options: Intl.DateTimeFormatOptions = {
@@ -77,7 +77,7 @@ export default function Auth() {
     <div className="relative flex min-h-screen items-start justify-center bg-gradient-subtle p-4 pt-6">
       <div className="w-full max-w-sm">
         <div className="flex justify-center mb-4">
-          <img src={aureaLogo.url} alt="Áurea Securitizadora" className="h-32 w-auto" />
+          <img src={aureaLogo} alt="Áurea Securitizadora" className="h-32 w-auto" />
         </div>
 
 

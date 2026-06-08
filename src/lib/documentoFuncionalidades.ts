@@ -14,7 +14,7 @@ export async function gerarDocumentoFuncionalidadesPDF() {
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
-  doc.text("JHL SECURITIZADORA S/A", margin, 20);
+  doc.text("AUREA SECURITIZADORA S/A", margin, 20);
   doc.setFontSize(12);
   doc.setFont("helvetica", "normal");
   doc.text("Relatório de Funcionalidades Implementadas", margin, 30);

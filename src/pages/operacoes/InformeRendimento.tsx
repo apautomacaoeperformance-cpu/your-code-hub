@@ -108,7 +108,7 @@ export default function InformeRendimento() {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
-    doc.text("JHL SECURITIZADORA", 14, 12);
+    doc.text("AUREA SECURITIZADORA", 14, 12);
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.text(`${t("informeRendimento.title")} · ${t("informeRendimento.calendarYear")} ${r.ano_calendario}`, 14, 19);

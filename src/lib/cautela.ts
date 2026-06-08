@@ -82,7 +82,7 @@ export function gerarCautelaPDF(d: CautelaData) {
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(15);
-  doc.text("JHL SECURITIZADORA S/A", M, 11);
+  doc.text("AUREA SECURITIZADORA S/A", M, 11);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.text("CNPJ 66.352.239/0001-39", M, 17);
@@ -132,7 +132,7 @@ export function gerarCautelaPDF(d: CautelaData) {
   doc.line(W / 2 - lineW / 2, y, W / 2 + lineW / 2, y);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
-  doc.text("JHL SECURITIZADORA S/A", W / 2, y + 5, { align: "center" });
+  doc.text("AUREA SECURITIZADORA S/A", W / 2, y + 5, { align: "center" });
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(90);

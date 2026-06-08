@@ -216,11 +216,11 @@ export function buildRelatorioMensal(
   doc.setTextColor(15, 23, 42);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
-  doc.text("JHL SECURITIZADORA", 14, 12);
+  doc.text("AUREA SECURITIZADORA", 14, 12);
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.text(`Relatório Mensal para Investidores · ${MESES[mes - 1]} de ${ano}`, 14, 19);
-  doc.addImage(jhlLogo, "PNG", pageW - 14 - 28, 8, 28, 11);
+  doc.addImage(jhlLogo, "PNG", pageW - 14 - 16, 6, 16, 16);
   doc.setTextColor(0, 0, 0);
 
   doc.setFontSize(13);
@@ -333,11 +333,11 @@ export function buildRelatorioMensal(
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
-    doc.text("JHL SECURITIZADORA", 14, 12);
+    doc.text("AUREA SECURITIZADORA", 14, 12);
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.text(`Evolução da carteira · ${MESES[mes - 1]} de ${ano}`, 14, 19);
-    doc.addImage(jhlLogo, "PNG", pageW - 14 - 28, 8, 28, 11);
+    doc.addImage(jhlLogo, "PNG", pageW - 14 - 16, 6, 16, 16);
     doc.setTextColor(0);
 
     const gx = 20, gy = 40, gw = pageW - 40, gh = 80;

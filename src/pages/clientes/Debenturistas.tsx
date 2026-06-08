@@ -314,11 +314,11 @@ export default function Debenturistas() {
       doc.setTextColor(15, 23, 42);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
-      doc.text("JHL SECURITIZADORA", 14, 12);
+      doc.text("AUREA SECURITIZADORA", 14, 12);
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
       doc.text(t("debenturistas.reportTitle"), 14, 19);
-      doc.addImage(jhlLogo, "PNG", pageW - 14 - 28, 8, 28, 11);
+      doc.addImage(jhlLogo, "PNG", pageW - 14 - 16, 6, 16, 16);
       doc.setTextColor(0, 0, 0);
 
       doc.setFontSize(14);

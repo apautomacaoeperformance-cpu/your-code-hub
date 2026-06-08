@@ -98,7 +98,7 @@ export default {
     confirmDelete: "¿Está seguro que desea eliminar?",
   },
   sidebar: {
-    brand: "JHL SECURITIZADORA",
+    brand: "AUREA SECURITIZADORA",
     tagline: "Plataforma de crédito",
     dashboard: "Panel",
     investimentos: "Inversiones",

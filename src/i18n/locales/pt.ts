@@ -98,7 +98,7 @@ export default {
     confirmDelete: "Tem certeza que deseja excluir?",
   },
   sidebar: {
-    brand: "JHL SECURITIZADORA",
+    brand: "AUREA SECURITIZADORA",
     tagline: "Plataforma de crédito",
     dashboard: "Dashboard",
     investimentos: "Investimentos",
@@ -201,7 +201,7 @@ export default {
     neverUpdated: "Nunca sincronizado",
   },
   auth: {
-    title: "JHL SECURITIZADORA S/A",
+    title: "AUREA SECURITIZADORA S/A",
     access: "Acessar Plataforma",
     email: "E-mail",
     password: "Senha",

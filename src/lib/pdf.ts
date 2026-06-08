@@ -26,7 +26,7 @@ function header(doc: jsPDF, title: string, subtitle?: string) {
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
-  doc.text("JHL SECURITIZADORA", 14, 12);
+  doc.text("AUREA SECURITIZADORA", 14, 12);
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.text(t("pdf.brandTagline", "Plataforma de crédito"), 14, 19);
