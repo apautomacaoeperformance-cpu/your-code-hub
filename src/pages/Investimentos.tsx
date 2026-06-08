@@ -349,7 +349,7 @@ export default function Investimentos() {
       } catch (e) {
         console.warn("Falha ao inserir logo no PDF", e);
       }
-      doc.setTextColor(15, 23, 42);
+      doc.setTextColor(25, 45, 77);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
       doc.text("AUREA SECURITIZADORA", 14, 12);
@@ -435,7 +435,7 @@ export default function Investimentos() {
             : [[{ content: t("investimentos.noRecords"), colSpan: head.length, styles: { halign: "center", textColor: 130 } }]],
           foot: foot ? [foot] : undefined,
           styles: { fontSize: 8, cellPadding: 2, halign: "center", valign: "middle" },
-          headStyles: { fillColor: [15, 23, 42], textColor: 255, halign: "center" },
+          headStyles: { fillColor: [25, 45, 77], textColor: 255, halign: "center" },
           footStyles: { fillColor: [241, 245, 249], textColor: 0, fontStyle: "bold", halign: "center" },
           alternateRowStyles: { fillColor: [248, 250, 252] },
           margin: { left: 14, right: 14 },
@@ -595,9 +595,9 @@ export default function Investimentos() {
 
       {/* KPIs CDI */}
       <div className="grid gap-4 md:grid-cols-3 !mt-8">
-        <Kpi label={t("investimentos.totalInvestedCdi")} value={fmt(kpiCdi.total)} icon={Wallet} accentColor="hsl(217 91% 60%)" bgColor="hsl(217 91% 95%)" />
-        <Kpi label={t("investimentos.yieldPct")} value={fmtPct(kpiCdi.pct, locale, 3)} icon={Percent} accentColor="hsl(217 91% 60%)" bgColor="hsl(217 91% 95%)" />
-        <Kpi label={t("investimentos.yieldLabel")} value={fmt(kpiCdi.rend)} icon={TrendingUp} accentColor="hsl(217 91% 60%)" bgColor="hsl(217 91% 95%)" />
+        <Kpi label={t("investimentos.totalInvestedCdi")} value={fmt(kpiCdi.total)} icon={Wallet} accentColor="hsl(217 51% 20%)" bgColor="hsl(217 51% 95%)" />
+        <Kpi label={t("investimentos.yieldPct")} value={fmtPct(kpiCdi.pct, locale, 3)} icon={Percent} accentColor="hsl(217 51% 20%)" bgColor="hsl(217 51% 95%)" />
+        <Kpi label={t("investimentos.yieldLabel")} value={fmt(kpiCdi.rend)} icon={TrendingUp} accentColor="hsl(217 51% 20%)" bgColor="hsl(217 51% 95%)" />
       </div>
 
       {/* Tabela CDI */}
@@ -651,7 +651,7 @@ export default function Investimentos() {
                     />
                   )}
                   <Line type="monotone" dataKey="preFixado" name={t("investimentos.linePre")} stroke="hsl(142 71% 45%)" strokeWidth={2} dot={false} />
-                  <Line type="monotone" dataKey="cdi" name={t("investimentos.lineCdi")} stroke="hsl(217 91% 60%)" strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="cdi" name={t("investimentos.lineCdi")} stroke="hsl(217 51% 20%)" strokeWidth={2} dot={false} />
 
                 </LineChart>
               </ResponsiveContainer>
@@ -728,7 +728,7 @@ export default function Investimentos() {
 function Kpi({ label, value, icon: Icon, accentColor, bgColor }: { label: string; value: string; icon: any; accentColor?: string; bgColor?: string }) {
   const hasBg = !!bgColor;
   return (
-    <Card className={accentColor ? "border-l-4 border-r-4" : ""} style={{ ...(accentColor ? { borderLeftColor: accentColor, borderRightColor: accentColor } : {}), ...(bgColor ? { backgroundColor: bgColor, color: "hsl(222 47% 11%)" } : {}) }}>
+    <Card className={accentColor ? "border-l-4 border-r-4" : ""} style={{ ...(accentColor ? { borderLeftColor: accentColor, borderRightColor: accentColor } : {}), ...(bgColor ? { backgroundColor: bgColor, color: "hsl(217 47% 11%)" } : {}) }}>
       <CardContent className="flex items-center justify-between gap-3 px-4 py-2">
         <div className="space-y-1">
           <div className={`text-xs font-medium ${hasBg ? "text-slate-600" : "text-muted-foreground"}`}>{label}</div>

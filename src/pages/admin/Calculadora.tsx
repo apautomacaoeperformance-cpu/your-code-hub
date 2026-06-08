@@ -200,7 +200,7 @@ export default function Calculadora() {
     } catch (e) {
       console.warn("Falha ao inserir logo no PDF", e);
     }
-    doc.setTextColor(15, 23, 42);
+    doc.setTextColor(25, 45, 77);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
     doc.text(t("simulador.title"), margin, 12);

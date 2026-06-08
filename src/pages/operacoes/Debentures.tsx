@@ -343,7 +343,7 @@ export default function Debentures() {
       } catch (e) {
         console.warn("Falha ao inserir logo no PDF", e);
       }
-      doc.setTextColor(15, 23, 42);
+      doc.setTextColor(25, 45, 77);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
       doc.text("AUREA SECURITIZADORA", 14, 12);
@@ -382,7 +382,7 @@ export default function Debentures() {
         body,
         foot: [["Total", "", String(totCotas), String(totVend), String(totDisp), fmt(totValor), fmt(totRend), fmt(totRendLiq), `${debs.length} deb.`]],
         styles: { fontSize: 9, cellPadding: 3 },
-        headStyles: { fillColor: [15, 23, 42], textColor: 255, halign: "center" },
+        headStyles: { fillColor: [25, 45, 77], textColor: 255, halign: "center" },
         footStyles: { fillColor: [241, 245, 249], textColor: 0, fontStyle: "bold", halign: "center" },
         alternateRowStyles: { fillColor: [248, 250, 252] },
         columnStyles: {
@@ -670,7 +670,7 @@ export default function Debentures() {
                     <td className="px-2 py-1">
                       <Select value={d.status} onValueChange={(v: any) => changeStatus(d.id, v)}>
                         <SelectTrigger className="h-7 w-auto gap-1 border-0 bg-transparent p-0 hover:bg-transparent focus:ring-0 [&>svg]:hidden">
-                          <Badge variant="outline" className={d.status === "ativo" && d.tipo_taxa === "CDI" ? "bg-blue-100 text-blue-700 border-blue-200" : statusColor[d.status]}>
+                          <Badge variant="outline" className={d.status === "ativo" && d.tipo_taxa === "CDI" ? "bg-[#192D4D]/10 text-[#192D4D] border-[#192D4D]/30 dark:bg-[#192D4D]/30 dark:text-[#9db4d6]" : statusColor[d.status]}>
                             {d.status === "ativo" ? t("debentures.active") : d.status === "suspenso" ? t("debentures.suspended") : t("debentures.cancelled")}
                           </Badge>
                         </SelectTrigger>

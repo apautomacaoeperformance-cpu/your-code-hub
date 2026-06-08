@@ -77,7 +77,7 @@ export function gerarCautelaPDF(d: CautelaData) {
   const contentW = W - M * 2;
 
   // Cabeçalho
-  doc.setFillColor(15, 23, 42);
+  doc.setFillColor(25, 45, 77);
   doc.rect(0, 0, W, 24, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");

@@ -213,7 +213,7 @@ export function buildRelatorioMensal(
 
   doc.setFillColor(255, 255, 255);
   doc.rect(0, 0, pageW, 28, "F");
-  doc.setTextColor(15, 23, 42);
+  doc.setTextColor(25, 45, 77);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
   doc.text("AUREA SECURITIZADORA", 14, 12);
@@ -260,7 +260,7 @@ export function buildRelatorioMensal(
       fmtBRL(totalRendAtual),
     ]],
     styles: { fontSize: 9, cellPadding: 2.5, valign: "middle" },
-    headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+    headStyles: { fillColor: [25, 45, 77], textColor: 255 },
     footStyles: { fillColor: [241, 245, 249], textColor: 0, fontStyle: "bold" },
     alternateRowStyles: { fillColor: [248, 250, 252] },
     columnStyles: {
@@ -286,7 +286,7 @@ export function buildRelatorioMensal(
       head: [["Data Retirada", "Data Investimento", "Tipo", "Vlr. Principal", "Vlr. Retirado", "Rendimento"]],
       body: [[{ content: "Nenhuma retirada no período.", colSpan: 6, styles: { halign: "center", textColor: 120 } }]],
       styles: { fontSize: 9, cellPadding: 2.5 },
-      headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+      headStyles: { fillColor: [25, 45, 77], textColor: 255 },
     });
   } else {
     autoTable(doc, {
@@ -300,7 +300,7 @@ export function buildRelatorioMensal(
         fmtBRL(totalRetRend),
       ]],
       styles: { fontSize: 9, cellPadding: 2.5 },
-      headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+      headStyles: { fillColor: [25, 45, 77], textColor: 255 },
       footStyles: { fillColor: [241, 245, 249], textColor: 0, fontStyle: "bold" },
       alternateRowStyles: { fillColor: [248, 250, 252] },
       columnStyles: {
@@ -330,7 +330,7 @@ export function buildRelatorioMensal(
     doc.addPage();
     doc.setFillColor(255, 255, 255);
     doc.rect(0, 0, pageW, 28, "F");
-    doc.setTextColor(15, 23, 42);
+    doc.setTextColor(25, 45, 77);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
     doc.text("AUREA SECURITIZADORA", 14, 12);
@@ -348,7 +348,7 @@ export function buildRelatorioMensal(
     const minV = Math.min(...evolucao.map((e) => e.saldo), 0);
     const range = Math.max(maxV - minV, 1);
     const stepX = evolucao.length > 1 ? gw / (evolucao.length - 1) : 0;
-    doc.setDrawColor(15, 23, 42);
+    doc.setDrawColor(25, 45, 77);
     doc.setLineWidth(0.6);
     for (let i = 1; i < evolucao.length; i++) {
       const x1 = gx + (i - 1) * stepX;
@@ -368,7 +368,7 @@ export function buildRelatorioMensal(
       head: [["Mês/Ano", "Saldo total (valor + rendimento)", "Índice CDI"]],
       body: evolucao.map((e) => [e.label, fmtBRL(e.saldo), "-"]),
       styles: { fontSize: 9, cellPadding: 2.5 },
-      headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+      headStyles: { fillColor: [25, 45, 77], textColor: 255 },
       alternateRowStyles: { fillColor: [248, 250, 252] },
       columnStyles: { 1: { halign: "right" }, 2: { halign: "center" } },
     });

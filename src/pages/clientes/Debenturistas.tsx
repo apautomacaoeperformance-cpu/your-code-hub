@@ -311,7 +311,7 @@ export default function Debenturistas() {
 
       doc.setFillColor(255, 255, 255);
       doc.rect(0, 0, pageW, 28, "F");
-      doc.setTextColor(15, 23, 42);
+      doc.setTextColor(25, 45, 77);
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
       doc.text("AUREA SECURITIZADORA", 14, 12);
@@ -344,7 +344,7 @@ export default function Debenturistas() {
           [t("debenturistas.distinctDebentures"), String(grupos.size)],
         ],
         styles: { fontSize: 10, cellPadding: 3 },
-        headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+        headStyles: { fillColor: [25, 45, 77], textColor: 255 },
         columnStyles: { 1: { halign: "right", fontStyle: "bold" } },
         didParseCell: (data: any) => {
           if (data.section === "body" && (data.row.index === 2 || data.row.index === 3) && data.column.index === 1) {
@@ -366,7 +366,7 @@ export default function Debenturistas() {
         ]),
         foot: [[t("debenturistas.total"), String(totQtd), fmt(totValor), fmt(totRend), fmt(totRendLiq), fmtPct(totRend, totValor)]],
         styles: { fontSize: 9, cellPadding: 2.5 },
-        headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+        headStyles: { fillColor: [25, 45, 77], textColor: 255 },
         footStyles: { fillColor: [241, 245, 249], textColor: 0, fontStyle: "bold" },
         alternateRowStyles: { fillColor: [248, 250, 252] },
         columnStyles: { 1: { halign: "center" }, 2: { halign: "right" }, 3: { halign: "right" }, 4: { halign: "right" }, 5: { halign: "right" } },
@@ -384,7 +384,7 @@ export default function Debenturistas() {
         foot: [[{ content: t("debenturistas.grandTotal"), colSpan: 2, styles: { halign: "right" } }, fmt(totValor), fmt(totRend), fmt(totRendLiq), fmtPct(totRend, totValor)]],
         showFoot: "lastPage",
         styles: { fontSize: 8, cellPadding: 2 },
-        headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+        headStyles: { fillColor: [25, 45, 77], textColor: 255 },
         footStyles: { fillColor: [241, 245, 249], textColor: 0, fontStyle: "bold" },
         columnStyles: { 2: { halign: "right" }, 3: { halign: "right" }, 4: { halign: "right" }, 5: { halign: "right" } },
         didParseCell: (data: any) => {

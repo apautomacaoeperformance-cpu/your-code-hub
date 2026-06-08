@@ -103,7 +103,7 @@ export default function InformeRendimento() {
   const baixarPDF = (r: any) => {
     const doc = new jsPDF();
     const pageW = doc.internal.pageSize.getWidth();
-    doc.setFillColor(15, 23, 42);
+    doc.setFillColor(25, 45, 77);
     doc.rect(0, 0, pageW, 28, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(16);
@@ -138,7 +138,7 @@ export default function InformeRendimento() {
         [t("informeRendimento.colLiquido"), fmt(Number(r.total_rendimento_liquido || 0))],
       ],
       styles: { fontSize: 10, cellPadding: 3 },
-      headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+      headStyles: { fillColor: [25, 45, 77], textColor: 255 },
       columnStyles: { 1: { halign: "right", fontStyle: "bold" } },
     });
 

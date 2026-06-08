@@ -9,7 +9,7 @@ export async function gerarDocumentoFuncionalidadesPDF() {
   const contentWidth = pageWidth - margin * 2;
 
   // Cabeçalho
-  doc.setFillColor(15, 23, 42);
+  doc.setFillColor(25, 45, 77);
   doc.rect(0, 0, pageWidth, 40, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
@@ -29,7 +29,7 @@ export async function gerarDocumentoFuncionalidadesPDF() {
     
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
-    doc.setTextColor(15, 23, 42);
+    doc.setTextColor(25, 45, 77);
     doc.text(title, margin, y);
     y += 8;
 

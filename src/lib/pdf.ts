@@ -21,7 +21,7 @@ const t = (key: string, fallback?: string) => {
 };
 
 function header(doc: jsPDF, title: string, subtitle?: string) {
-  doc.setFillColor(15, 23, 42);
+  doc.setFillColor(25, 45, 77);
   doc.rect(0, 0, doc.internal.pageSize.getWidth(), 28, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(16);
@@ -120,7 +120,7 @@ export function exportOperacoesPDF(
     ]),
     foot: [["", "", t("common.total", "Total"), fmtMoney(total), "", "", "", `${ops.length} ${t("pdf.opsShort", "op.")}`]],
     styles: { fontSize: 9, cellPadding: 3 },
-    headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+    headStyles: { fillColor: [25, 45, 77], textColor: 255 },
     footStyles: { fillColor: [241, 245, 249], textColor: 0, fontStyle: "bold" },
     alternateRowStyles: { fillColor: [248, 250, 252] },
     columnStyles: { 3: { halign: "right" }, 4: { halign: "right" } },
@@ -156,7 +156,7 @@ export function exportDashboardPDF(
       [t("pdf.totalOps", "Total de operações"), String(ops.length)],
     ],
     styles: { fontSize: 10, cellPadding: 4 },
-    headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+    headStyles: { fillColor: [25, 45, 77], textColor: 255 },
     columnStyles: { 1: { halign: "right", fontStyle: "bold" } },
   });
 
@@ -172,7 +172,7 @@ export function exportDashboardPDF(
     head: [[t("fields.status", "Status"), t("pdf.qty", "Qtd."), t("fields.value", "Valor")]],
     body: statusBody,
     styles: { fontSize: 10, cellPadding: 4 },
-    headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+    headStyles: { fillColor: [25, 45, 77], textColor: 255 },
     columnStyles: { 1: { halign: "right" }, 2: { halign: "right" } },
   });
 
@@ -195,7 +195,7 @@ export function exportDashboardPDF(
       t(`status.${o.status}`, o.status),
     ]),
     styles: { fontSize: 8, cellPadding: 2.5 },
-    headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+    headStyles: { fillColor: [25, 45, 77], textColor: 255 },
     alternateRowStyles: { fillColor: [248, 250, 252] },
     columnStyles: { 3: { halign: "right" } },
   });

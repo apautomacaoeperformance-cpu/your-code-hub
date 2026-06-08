@@ -500,7 +500,7 @@ export default function DebentureDetalhe() {
     } catch (e) {
       console.warn("Falha ao inserir logo no PDF", e);
     }
-    doc.setTextColor(15, 23, 42);
+    doc.setTextColor(25, 45, 77);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
     doc.text("AUREA SECURITIZADORA", 14, 12);
@@ -542,7 +542,7 @@ export default function DebentureDetalhe() {
         ["Total arrecadado", fmt(vendidas.length * valorCota)],
       ],
       styles: { fontSize: 9, cellPadding: 2.5 },
-      headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+      headStyles: { fillColor: [25, 45, 77], textColor: 255 },
       columnStyles: { 1: { halign: "right", fontStyle: "bold" } },
     });
 
@@ -596,7 +596,7 @@ export default function DebentureDetalhe() {
       })()],
       showFoot: "lastPage",
       styles: { fontSize: 8, cellPadding: 2 },
-      headStyles: { fillColor: [15, 23, 42], textColor: 255, halign: "center" },
+      headStyles: { fillColor: [25, 45, 77], textColor: 255, halign: "center" },
       footStyles: { fillColor: [241, 245, 249], textColor: 0, fontStyle: "bold", halign: "center" },
       alternateRowStyles: { fillColor: [248, 250, 252] },
       columnStyles: { 0: { halign: "center", cellWidth: 8 }, 4: { halign: "center" }, 6: { halign: "center" }, 7: { halign: "center" }, 8: { halign: "center" }, 9: { halign: "center" } },
@@ -643,7 +643,7 @@ export default function DebentureDetalhe() {
     } catch (e) {
       console.warn("Falha ao inserir logo no PDF", e);
     }
-    doc.setTextColor(15, 23, 42);
+    doc.setTextColor(25, 45, 77);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
     doc.text("AUREA SECURITIZADORA", 14, 12);
@@ -691,7 +691,7 @@ export default function DebentureDetalhe() {
         ...(deb.observacoes ? [["Observações", String(deb.observacoes)]] : []),
       ],
       styles: { fontSize: 9, cellPadding: 2.5 },
-      headStyles: { fillColor: [15, 23, 42], textColor: 255 },
+      headStyles: { fillColor: [25, 45, 77], textColor: 255 },
       columnStyles: { 1: { halign: "right", fontStyle: "bold" } },
     });
 
@@ -714,7 +714,7 @@ export default function DebentureDetalhe() {
           ]),
       foot: [["Total", String(vendidas.length), fmt(totalArrecadado), fmt(rendimentoAcumuladoTotal), fmt(rendimentoLiquidoTotal), pctFmt(rendimentoAcumuladoTotal, totalArrecadado)]],
       styles: { fontSize: 9, cellPadding: 2.5 },
-      headStyles: { fillColor: [15, 23, 42], textColor: 255, halign: "center" },
+      headStyles: { fillColor: [25, 45, 77], textColor: 255, halign: "center" },
       footStyles: { fillColor: [241, 245, 249], textColor: 0, fontStyle: "bold", halign: "center" },
       alternateRowStyles: { fillColor: [248, 250, 252] },
       columnStyles: { 1: { halign: "center" }, 2: { halign: "center" }, 3: { halign: "center" }, 4: { halign: "center" }, 5: { halign: "center" } },
@@ -1050,17 +1050,17 @@ export default function DebentureDetalhe() {
                 key={item.label}
                 className="relative overflow-hidden rounded-xl border border-border py-3 px-4 shadow-sm"
                 style={{
-                  backgroundColor: isCDI ? "hsl(217 91% 95%)" : "hsl(142 71% 95%)",
+                  backgroundColor: isCDI ? "hsl(217 51% 95%)" : "hsl(142 71% 95%)",
                   borderLeftWidth: 4,
-                  borderLeftColor: isCDI ? "hsl(217 91% 60%)" : "hsl(142 71% 45%)",
+                  borderLeftColor: isCDI ? "hsl(217 51% 20%)" : "hsl(142 71% 45%)",
                   borderRightWidth: 4,
-                  borderRightColor: isCDI ? "hsl(217 91% 60%)" : "hsl(142 71% 45%)",
+                  borderRightColor: isCDI ? "hsl(217 51% 20%)" : "hsl(142 71% 45%)",
                 }}
               >
                 <div className="flex flex-col items-center gap-2 text-center">
                   <div
                     className="flex h-8 w-8 items-center justify-center rounded-lg"
-                    style={{ backgroundColor: isCDI ? "hsl(217 91% 95%)" : "hsl(142 71% 95%)" }}
+                    style={{ backgroundColor: isCDI ? "hsl(217 51% 95%)" : "hsl(142 71% 95%)" }}
                   >
                     <item.icon className={`h-4 w-4 ${item.accent}`} />
                   </div>

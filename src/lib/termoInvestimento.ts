@@ -41,7 +41,7 @@ const HEADER_H = 22;
 
 
 function pageHeader(doc: jsPDF) {
-  doc.setFillColor(15, 23, 42);
+  doc.setFillColor(25, 45, 77);
   doc.rect(0, 0, doc.internal.pageSize.getWidth(), HEADER_H, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(15);
@@ -91,7 +91,7 @@ function writeSectionTitle(doc: jsPDF, title: string, y: number): number {
   y += 2;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
-  doc.setTextColor(15, 23, 42);
+  doc.setTextColor(25, 45, 77);
   doc.text(title, doc.internal.pageSize.getWidth() / 2, y, { align: "center" });
   doc.setTextColor(0, 0, 0);
   return y + 4;
