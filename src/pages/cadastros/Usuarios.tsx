@@ -41,9 +41,12 @@ export default function Usuarios() {
   const { data: usuarios, isLoading } = useQuery({
     queryKey: ["usuarios-list"],
     queryFn: async () => {
-      const { data: profiles } = await supabase.from("profiles").select("id, full_name, email, created_at, ativo, must_change_password").order("created_at", { ascending: false });
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, email, created_at, ativo, must_change_password" as never)
+        .order("created_at", { ascending: false });
       const { data: rolesRows } = await supabase.from("user_roles").select("user_id, role");
-      return (profiles ?? []).map((p) => ({
+      return ((profiles ?? []) as any[]).map((p) => ({
         ...p,
         roles: (rolesRows ?? []).filter((r) => r.user_id === p.id).map((r) => r.role as AppRole),
       }));
