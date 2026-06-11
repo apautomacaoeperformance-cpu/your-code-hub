@@ -1,13 +1,1 @@
-project_id = "ewoukrtcsthxmczgdvza"
-
-[functions.migrate-sql]
-verify_jwt = false
-
-[functions.painel-migracao]
-verify_jwt = false
-
-[functions.zapsign-webhook]
-verify_jwt = false
-
-[functions.zapsign-send]
-verify_jwt = false
+project_id = "fiedvrhvssooyevrkjoz"
