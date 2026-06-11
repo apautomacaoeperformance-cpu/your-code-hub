@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { previewPdf } from "@/lib/pdfPreview";
-import { useFeriados, diasUteis as diasUteisFn, proximoDiaUtil, type FeriadosSet } from "@/lib/diasUteis";
+import { useFeriados, diasUteis as diasUteisFn, proximoDiaUtil, isDiaUtil, type FeriadosSet } from "@/lib/diasUteis";
 import {
   calcRendimento,
   calcLiquido,
@@ -305,7 +305,11 @@ export default function DebentureDetalhe() {
   const [comprovante, setComprovante] = useState<File | null>(null);
   const [salvando, setSalvando] = useState(false);
 
+  const [dataVendaInput, setDataVendaInput] = useState<string>("");
+
   const valorTotalVenda = Number(deb?.valor_cota || 0) * (quantidade || 0);
+
+  const hojeIso = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
   const resetForm = () => {
     setDebenturistaId("");
@@ -314,7 +318,15 @@ export default function DebentureDetalhe() {
     setModoEntrada("cotas");
     setValorEntrada("");
     setComprovante(null);
+    setDataVendaInput(proximoDiaUtil(hojeIso, feriados));
   };
+
+  useEffect(() => {
+    if (openVenda) {
+      resetForm();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openVenda, feriados, hojeIso]);
 
   const handleEnviarVenda = async () => {
     if (!deb) return;
@@ -326,6 +338,16 @@ export default function DebentureDetalhe() {
 
     setSalvando(true);
     try {
+      // valida data da venda
+      const dataVendaEfetiva = dataVendaInput || proximoDiaUtil(hojeIso, feriados);
+      if (!isDiaUtil(dataVendaEfetiva, feriados)) {
+        const sugerida = proximoDiaUtil(dataVendaEfetiva, feriados);
+        toast.error(`A data ${new Date(dataVendaEfetiva + "T00:00:00").toLocaleDateString()} não é dia útil. Próximo dia útil: ${new Date(sugerida + "T00:00:00").toLocaleDateString()}`);
+        setSalvando(false);
+        return;
+      }
+      const ajustada = dataVendaEfetiva !== hojeIso;
+
       // upload comprovante
       let comprovantePath: string | null = null;
       if (comprovante) {
@@ -339,9 +361,6 @@ export default function DebentureDetalhe() {
       // registra venda nas próximas N cotas disponíveis
       const cotasSelecionadas = disponiveis.slice(0, quantidade);
       const valorCota = Number(deb.valor_cota || 0);
-      const hojeIso = new Date().toISOString().slice(0, 10);
-      const dataVendaEfetiva = proximoDiaUtil(hojeIso, feriados);
-      const ajustada = dataVendaEfetiva !== hojeIso;
       const rows = cotasSelecionadas.map((c: any) => ({
         debenture_id: id,
         cota_id: c.id,
@@ -918,70 +937,84 @@ export default function DebentureDetalhe() {
                   </div>
 
                   <div className="grid gap-2">
-                    <div className="flex items-center justify-between">
-                      <Label>
-                        {modoEntrada === "cotas" ? t("debentureDetalhe.quantity") : t("debentureDetalhe.valorVenda")}{" "}
-                        <span className="text-destructive">*</span>
-                      </Label>
-                      <div className="inline-flex overflow-hidden rounded-md border border-border text-[11px]">
-                        <button
-                          type="button"
-                          onClick={() => setModoEntrada("cotas")}
-                          className={`px-2 py-0.5 transition-colors ${modoEntrada === "cotas" ? "bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:bg-muted"}`}
-                        >
-                          {t("debentureDetalhe.byCotas")}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setModoEntrada("valor");
-                            const vc = Number(deb?.valor_cota || 0);
-                            if (vc > 0) setValorEntrada((quantidade * vc).toFixed(2));
-                          }}
-                          className={`px-2 py-0.5 transition-colors ${modoEntrada === "valor" ? "bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:bg-muted"}`}
-                        >
-                          {t("debentureDetalhe.byValor")}
-                        </button>
-                      </div>
-                    </div>
-                    {modoEntrada === "cotas" ? (
-                      <Input
-                        type="number"
-                        min={1}
-                        max={disponiveis.length || 1}
-                        value={quantidade}
-                        onChange={(e) => setQuantidade(Math.max(1, Number(e.target.value) || 1))}
-                      />
-                    ) : (
-                      <Input
-                        type="number"
-                        step="1000"
-                        min={0}
-                        value={valorEntrada}
-                        onChange={(e) => {
-                          setValorEntrada(e.target.value);
-                          const v = Number(e.target.value) || 0;
-                          const vc = Number(deb?.valor_cota || 0);
-                          if (vc > 0) {
-                            const q = Math.floor(v / vc);
-                            const clamped = Math.max(1, Math.min(q || 1, disponiveis.length || 1));
-                            setQuantidade(clamped);
-                          }
-                        }}
-                        onBlur={(e) => {
-                          const v = Number(e.target.value) || 0;
-                          const arredondado = Math.round(v / 1000) * 1000;
-                          setValorEntrada(arredondado ? String(arredondado) : "");
-                          const vc = Number(deb?.valor_cota || 0);
-                          if (vc > 0 && arredondado > 0) {
-                            const q = Math.floor(arredondado / vc);
-                            const clamped = Math.max(1, Math.min(q || 1, disponiveis.length || 1));
-                            setQuantidade(clamped);
-                          }
-                        }}
-                      />
+                    <Label>Data da venda <span className="text-destructive">*</span></Label>
+                    <Input
+                      type="date"
+                      value={dataVendaInput}
+                      onChange={(e) => setDataVendaInput(e.target.value)}
+                    />
+                    {dataVendaInput && !isDiaUtil(dataVendaInput, feriados) && (
+                      <p className="text-[11px] text-destructive">
+                        Não é dia útil. Próximo: {new Date(proximoDiaUtil(dataVendaInput, feriados) + "T00:00:00").toLocaleDateString()}
+                      </p>
                     )}
                   </div>
+                </div>
+
+                <div className="grid gap-2">
+                  <div className="flex items-center justify-between">
+                    <Label>
+                      {modoEntrada === "cotas" ? t("debentureDetalhe.quantity") : t("debentureDetalhe.valorVenda")}{" "}
+                      <span className="text-destructive">*</span>
+                    </Label>
+                    <div className="inline-flex overflow-hidden rounded-md border border-border text-[11px]">
+                      <button
+                        type="button"
+                        onClick={() => setModoEntrada("cotas")}
+                        className={`px-2 py-0.5 transition-colors ${modoEntrada === "cotas" ? "bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:bg-muted"}`}
+                      >
+                        {t("debentureDetalhe.byCotas")}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setModoEntrada("valor");
+                          const vc = Number(deb?.valor_cota || 0);
+                          if (vc > 0) setValorEntrada((quantidade * vc).toFixed(2));
+                        }}
+                        className={`px-2 py-0.5 transition-colors ${modoEntrada === "valor" ? "bg-primary text-primary-foreground" : "bg-background text-muted-foreground hover:bg-muted"}`}
+                      >
+                        {t("debentureDetalhe.byValor")}
+                      </button>
+                    </div>
+                  </div>
+                  {modoEntrada === "cotas" ? (
+                    <Input
+                      type="number"
+                      min={1}
+                      max={disponiveis.length || 1}
+                      value={quantidade}
+                      onChange={(e) => setQuantidade(Math.max(1, Number(e.target.value) || 1))}
+                    />
+                  ) : (
+                    <Input
+                      type="number"
+                      step="1000"
+                      min={0}
+                      value={valorEntrada}
+                      onChange={(e) => {
+                        setValorEntrada(e.target.value);
+                        const v = Number(e.target.value) || 0;
+                        const vc = Number(deb?.valor_cota || 0);
+                        if (vc > 0) {
+                          const q = Math.floor(v / vc);
+                          const clamped = Math.max(1, Math.min(q || 1, disponiveis.length || 1));
+                          setQuantidade(clamped);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        const v = Number(e.target.value) || 0;
+                        const arredondado = Math.round(v / 1000) * 1000;
+                        setValorEntrada(arredondado ? String(arredondado) : "");
+                        const vc = Number(deb?.valor_cota || 0);
+                        if (vc > 0 && arredondado > 0) {
+                          const q = Math.floor(arredondado / vc);
+                          const clamped = Math.max(1, Math.min(q || 1, disponiveis.length || 1));
+                          setQuantidade(clamped);
+                        }
+                      }}
+                    />
+                  )}
                 </div>
 
                 <div className="flex items-center justify-between rounded-md border border-border/60 bg-muted/30 px-3 py-2 text-xs">
