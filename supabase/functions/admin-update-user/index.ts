@@ -82,6 +82,7 @@ Deno.serve(async (req) => {
     const profileUpdate: Record<string, unknown> = {};
     if (body.full_name !== undefined) profileUpdate.full_name = body.full_name;
     if (body.email) profileUpdate.email = body.email;
+    if (body.must_change_password !== undefined) profileUpdate.must_change_password = body.must_change_password;
     if (Object.keys(profileUpdate).length > 0) {
       await admin.from("profiles").update(profileUpdate).eq("id", body.user_id);
     }
