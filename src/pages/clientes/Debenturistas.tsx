@@ -622,22 +622,20 @@ export default function Debenturistas() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-7 gap-1 px-2 text-[10px]"
+                        className="h-7 w-7 p-0"
                         title="Inativar"
                         onClick={() => handleStatus(d.id, "suspenso")}
                       >
                         <Ban className="h-3 w-3" />
-                        Inativar
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-7 gap-1 px-2 text-[10px] text-destructive hover:text-destructive"
+                        className="h-7 w-7 p-0 text-destructive hover:text-destructive"
                         title="Excluir"
                         onClick={() => handleDelete(d.id, d.nome)}
                       >
                         <Trash2 className="h-3 w-3" />
-                        Excluir
                       </Button>
                       <Button
                         size="sm"
