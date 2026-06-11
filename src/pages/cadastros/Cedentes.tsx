@@ -179,14 +179,14 @@ export default function Cedentes() {
                       </Select>
                     </td>
                     <td className="px-4 py-2 text-right">
-                      <Button variant="outline" size="sm" className="mr-1 h-7 gap-1 px-2 text-[10px]" onClick={() => handleStatusChange(c.id, "suspenso")} title="Inativar">
-                        <Ban className="h-3 w-3" /> Inativar
+                      <Button variant="outline" size="sm" className="mr-1 h-7 w-7 p-0" onClick={() => handleStatusChange(c.id, "suspenso")} title="Inativar">
+                        <Ban className="h-3 w-3" />
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => gerarTermo(c.id)} title="Termo">
                         <FileSignature className="h-3 w-3" />
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => handleDelete(c.id)} className="h-7 gap-1 px-2 text-[10px] text-destructive hover:text-destructive" title="Excluir">
-                        <Trash2 className="h-3 w-3" /> Excluir
+                      <Button variant="outline" size="sm" onClick={() => handleDelete(c.id)} className="h-7 w-7 p-0 text-destructive hover:text-destructive" title="Excluir">
+                        <Trash2 className="h-3 w-3" />
                       </Button>
                     </td>
                   </tr>
