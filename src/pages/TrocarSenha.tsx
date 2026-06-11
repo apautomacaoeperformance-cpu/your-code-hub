@@ -33,7 +33,7 @@ export default function TrocarSenha() {
     }
     const { error: profErr } = await supabase
       .from("profiles")
-      .update({ must_change_password: false })
+      .update({ must_change_password: false } as never)
       .eq("id", user!.id);
     setSaving(false);
     if (profErr) return toast.error(profErr.message);
