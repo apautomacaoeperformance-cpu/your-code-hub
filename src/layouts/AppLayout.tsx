@@ -26,6 +26,7 @@ export default function AppLayout() {
   }
 
   if (!user) return <Navigate to="/auth" replace />;
+  if (mustChangePassword) return <Navigate to="/trocar-senha" replace />;
 
   const isInvestidorOnly =
     roles.includes("investidor") &&
