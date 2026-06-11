@@ -1,4 +1,4 @@
-project_id = "lxcwcftvloblguocihpw"
+project_id = "ewoukrtcsthxmczgdvza"
 
 [functions.migrate-sql]
 verify_jwt = false
