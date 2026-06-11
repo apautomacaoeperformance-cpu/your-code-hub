@@ -120,9 +120,16 @@ export default function Debenturistas() {
     qc.invalidateQueries({ queryKey: ["debenturistas"] });
   };
 
-  const handleDelete = async (id: string, nome: string) => {
-    if (!confirm("Deseja realmente excluir esse registro ?")) return;
-    const { error } = await supabase.from("debenturistas").delete().eq("id", id);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; nome: string } | null>(null);
+
+  const handleDelete = (id: string, nome: string) => {
+    setDeleteTarget({ id, nome });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const { error } = await supabase.from("debenturistas").delete().eq("id", deleteTarget.id);
+    setDeleteTarget(null);
     if (error) return toast.error(error.message);
     toast.success("Debenturista excluído");
     qc.invalidateQueries({ queryKey: ["debenturistas"] });
