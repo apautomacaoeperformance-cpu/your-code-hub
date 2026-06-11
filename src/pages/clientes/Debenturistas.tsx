@@ -699,6 +699,49 @@ export default function Debenturistas() {
                       >
                         <FileSignature className="h-3 w-3" />
                       </Button>
+
+                      {(() => {
+                        const zap = zapByDeb.get(d.id);
+                        const sending = enviandoZap === d.id;
+                        const status = zap?.status;
+                        const title = !zap ? "Enviar para assinatura (ZapSign)"
+                          : status === "signed" ? "Termo assinado via ZapSign"
+                          : status === "refused" ? "Cliente recusou — reenviar"
+                          : "Aguardando assinatura — reenviar";
+                        const Icon = status === "signed" ? CheckCircle2
+                          : status === "refused" ? XCircle
+                          : status === "pending" ? Clock
+                          : Send;
+                        const colorClass = status === "signed" ? "text-success"
+                          : status === "refused" ? "text-destructive"
+                          : status === "pending" ? "text-warning"
+                          : "";
+                        return (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className={`h-7 w-7 p-0 ${colorClass}`}
+                            title={title}
+                            disabled={sending}
+                            onClick={() => {
+                              if (status === "signed" && zap?.signed_file_url) {
+                                window.open(zap.signed_file_url, "_blank");
+                              } else {
+                                enviarParaAssinatura(d);
+                              }
+                            }}
+                          >
+                            <Icon className="h-3 w-3" />
+                          </Button>
+                        );
+                      })()}
+                      </div>
+                  </td>
+                </tr>
+              );})}
+              {filtered.length === 0 && (
+                <tr><td colSpan={6} className="py-10 text-center text-xs text-muted-foreground">{t("debenturistas.none")}</td></tr>
+              )}
                       
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
