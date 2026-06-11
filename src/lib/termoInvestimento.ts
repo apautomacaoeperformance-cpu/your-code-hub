@@ -264,29 +264,6 @@ export async function gerarTermoInvestimentoPDF(d: DebenturistaTermo) {
   previewPdf(doc, `termo_investidor_${slug || "investidor"}.pdf`);
 }
 
-/** Gera o PDF do Termo de Investidor (PF) e retorna como base64 (sem prefixo data:). */
-export async function buildTermoInvestimentoPDFBase64(d: DebenturistaTermo): Promise<string> {
-  const template = await fetchTermoTemplate();
-  const doc = new jsPDF({ unit: "mm", format: "a4" });
-  pageHeader(doc);
-  let y = HEADER_H + 15;
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("TERMO DE INVESTIDOR QUALIFICADO", doc.internal.pageSize.getWidth() / 2, y, { align: "center" });
-  y += 6;
-  const { y: contentY, dataY } = renderTemplate(doc, template, {
-    nome: d.nome || "",
-    cpf: d.documento || "",
-    endereco: buildEndereco(d),
-    data: formatDateExtenso(new Date()),
-  }, y);
-  renderSignature(doc, contentY, dataY, d.nome, d.documento);
-  pageFooter(doc);
-  const dataUri = doc.output("datauristring");
-  return dataUri.split(",")[1] || "";
-}
-
-
 export async function gerarTermoCedentePDF(d: CedenteTermo) {
   const template = await fetchTermoTemplate();
 
