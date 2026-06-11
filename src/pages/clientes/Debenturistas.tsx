@@ -17,6 +17,10 @@ import { Badge } from "@/components/ui/badge";
 import {
   Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import jsPDF from "jspdf";
@@ -116,9 +120,16 @@ export default function Debenturistas() {
     qc.invalidateQueries({ queryKey: ["debenturistas"] });
   };
 
-  const handleDelete = async (id: string, nome: string) => {
-    if (!confirm("Deseja realmente excluir esse registro ?")) return;
-    const { error } = await supabase.from("debenturistas").delete().eq("id", id);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; nome: string } | null>(null);
+
+  const handleDelete = (id: string, nome: string) => {
+    setDeleteTarget({ id, nome });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const { error } = await supabase.from("debenturistas").delete().eq("id", deleteTarget.id);
+    setDeleteTarget(null);
     if (error) return toast.error(error.message);
     toast.success("Debenturista excluído");
     qc.invalidateQueries({ queryKey: ["debenturistas"] });
@@ -829,6 +840,19 @@ export default function Debenturistas() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(o) => !o && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>Deseja realmente excluir esse registro ?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">OK</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
