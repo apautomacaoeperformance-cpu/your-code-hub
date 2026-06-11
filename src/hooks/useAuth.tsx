@@ -41,14 +41,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
       if (newSession?.user) {
+        setLoading(true);
         setTimeout(async () => {
-          await ensureUserSetup(newSession.user);
-          await loadRoles(newSession.user.id);
-          await loadProfile(newSession.user.id);
+          await hydrateUser(newSession.user);
+          setLoading(false);
         }, 0);
       } else {
         setRoles([]);
         setMustChangePassword(false);
+        setLoading(false);
       }
     });
 
@@ -56,9 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        await ensureUserSetup(session.user);
-        await loadRoles(session.user.id);
-        await loadProfile(session.user.id);
+        await hydrateUser(session.user);
       }
       setLoading(false);
     });
@@ -111,15 +110,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [user]);
 
+  const hydrateUser = async (currentUser: User) => {
+    await ensureUserSetup(currentUser);
+    await loadRoles(currentUser.id);
+    await loadProfile(currentUser.id);
+  };
+
   const ensureUserSetup = async (currentUser: User) => {
     const fullName =
       currentUser.user_metadata?.full_name ?? currentUser.user_metadata?.name ?? "";
 
-    await supabase.from("profiles").upsert({
-      id: currentUser.id,
+    const profileData = {
       email: currentUser.email ?? null,
       full_name: fullName,
-    });
+    };
+
+    const { data: existingProfile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", currentUser.id)
+      .maybeSingle();
+
+    if (existingProfile) {
+      await supabase.from("profiles").update(profileData).eq("id", currentUser.id);
+    } else {
+      await supabase.from("profiles").insert({ id: currentUser.id, ...profileData });
+    }
 
     // Roles are assigned by an administrator; do not auto-grant any role here.
   };
