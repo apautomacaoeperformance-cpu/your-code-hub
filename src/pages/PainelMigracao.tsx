@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import {
   Eye, EyeOff, Copy, Check, ShieldAlert, Key, Download,
-  Loader2, Code2, Database, AlertTriangle, Info,
+  Loader2, Code2, Database, AlertTriangle, Info, FileCode,
 } from "lucide-react";
 
 type TableInfo = {
@@ -82,6 +82,35 @@ function SecretRow({ label, value }: { label: string; value: string }) {
 export default function PainelMigracao() {
   const [data, setData] = useState<Payload | null>(null);
   const [loading, setLoading] = useState(false);
+  const [sqlOpen, setSqlOpen] = useState<Record<string, boolean>>({});
+
+  const sqlModules = useMemo(() => {
+    const modules = import.meta.glob("/supabase/sql/*.sql", {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    }) as Record<string, string>;
+    return Object.entries(modules).map(([path, content]) => ({
+      name: path.split("/").pop() ?? path,
+      path,
+      content: content as string,
+    }));
+  }, []);
+
+  function toggleSql(name: string) {
+    setSqlOpen((prev) => ({ ...prev, [name]: !prev[name] }));
+  }
+
+  function baixarSQL(content: string, filename: string) {
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`${filename} baixado`);
+  }
 
   async function revelarTudo() {
     setLoading(true);
@@ -194,6 +223,45 @@ export default function PainelMigracao() {
           </Button>
         )}
       </div>
+
+      {/* Passo 0 — Scripts SQL */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileCode className="h-5 w-5 text-primary" />
+            Passo 0 — Scripts SQL (rodar antes no SQL Editor)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {sqlModules.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Nenhum script SQL encontrado em supabase/sql/.</p>
+          ) : (
+            <div className="space-y-3">
+              {sqlModules.map(({ name, content }) => (
+                <div key={name} className="rounded-md border border-border bg-muted/30 p-3 space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <code className="font-mono text-sm font-medium">{name}</code>
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="ghost" onClick={() => toggleSql(name)}>
+                        {sqlOpen[name] ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                      </Button>
+                      <CopyBtn value={content} label={name} />
+                      <Button size="sm" variant="outline" onClick={() => baixarSQL(content, name)}>
+                        <Download className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                  {sqlOpen[name] && (
+                    <pre className="max-h-64 overflow-auto rounded bg-black/5 p-2 text-xs text-muted-foreground">
+                      <code>{content}</code>
+                    </pre>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Passo 1 */}
       <Card>
