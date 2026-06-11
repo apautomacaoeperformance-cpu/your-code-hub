@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { previewPdf } from "@/lib/pdfPreview";
-import { useFeriados, diasUteis as diasUteisFn, proximoDiaUtil, type FeriadosSet } from "@/lib/diasUteis";
+import { useFeriados, diasUteis as diasUteisFn, proximoDiaUtil, isDiaUtil, type FeriadosSet } from "@/lib/diasUteis";
 import {
   calcRendimento,
   calcLiquido,
