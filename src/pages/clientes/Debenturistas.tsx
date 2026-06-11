@@ -117,7 +117,7 @@ export default function Debenturistas() {
   };
 
   const handleDelete = async (id: string, nome: string) => {
-    if (!confirm(`Excluir o debenturista "${nome}"? Esta ação não pode ser desfeita.`)) return;
+    if (!confirm("Deseja realmente excluir esse registro ?")) return;
     const { error } = await supabase.from("debenturistas").delete().eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Debenturista excluído");
