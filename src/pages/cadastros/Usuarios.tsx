@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
@@ -34,7 +35,8 @@ export default function Usuarios() {
   const [pwdUser, setPwdUser] = useState<{ id: string; email: string } | null>(null);
   const [newPwd, setNewPwd] = useState("");
   const [pwdSaving, setPwdSaving] = useState(false);
-  const [form, setForm] = useState({ full_name: "", email: "", password: "", role: "operador" as AppRole });
+  const [pwdForceChange, setPwdForceChange] = useState(true);
+  const [form, setForm] = useState({ full_name: "", email: "", password: "", role: "operador" as AppRole, must_change_password: true });
 
   const { data: usuarios, isLoading } = useQuery({
     queryKey: ["usuarios-list"],
@@ -61,7 +63,7 @@ export default function Usuarios() {
       return toast.error((data as any)?.error ?? error?.message ?? t("usuarios.createError"));
     }
     toast.success(t("usuarios.createSuccess"));
-    setForm({ full_name: "", email: "", password: "", role: "operador" });
+    setForm({ full_name: "", email: "", password: "", role: "operador", must_change_password: true });
     qc.invalidateQueries({ queryKey: ["usuarios-list"] });
   };
 
@@ -122,7 +124,7 @@ export default function Usuarios() {
     if (newPwd.length < 8) return toast.error("A senha precisa ter ao menos 8 caracteres");
     setPwdSaving(true);
     const { data, error } = await supabase.functions.invoke("admin-update-user", {
-      body: { user_id: pwdUser.id, password: newPwd },
+      body: { user_id: pwdUser.id, password: newPwd, must_change_password: pwdForceChange },
     });
     setPwdSaving(false);
     if (error || (data as any)?.error) {
@@ -131,6 +133,7 @@ export default function Usuarios() {
     toast.success("Senha redefinida");
     setPwdUser(null);
     setNewPwd("");
+    setPwdForceChange(true);
   };
 
   return (
