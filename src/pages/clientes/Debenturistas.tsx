@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Pencil, Search, FileText, CalendarRange, FileSignature, Upload, Link as LinkIcon, Download, X, Eye, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Pencil, Search, FileText, CalendarRange, FileSignature, Upload, Link as LinkIcon, Download, X, Eye, ArrowUpDown, ArrowUp, ArrowDown, Trash2, Ban } from "lucide-react";
 import { toast } from "sonner";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
@@ -113,6 +113,14 @@ export default function Debenturistas() {
       .eq("id", id);
     if (error) return toast.error(error.message);
     toast.success(t("debenturistas.statusUpdated", { status }));
+    qc.invalidateQueries({ queryKey: ["debenturistas"] });
+  };
+
+  const handleDelete = async (id: string, nome: string) => {
+    if (!confirm(`Excluir o debenturista "${nome}"? Esta ação não pode ser desfeita.`)) return;
+    const { error } = await supabase.from("debenturistas").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Debenturista excluído");
     qc.invalidateQueries({ queryKey: ["debenturistas"] });
   };
 
@@ -677,10 +685,21 @@ export default function Debenturistas() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="border-0 shadow-none ring-0">
                           <DropdownMenuItem onClick={() => handleStatus(d.id, "ativo")}>{t("debenturistas.statusActivate")}</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleStatus(d.id, "suspenso")}>{t("debenturistas.statusSuspend")}</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleStatus(d.id, "suspenso")}>
+                            <Ban className="mr-2 h-3.5 w-3.5" /> Inativar
+                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleStatus(d.id, "cancelado")} className="text-destructive">{t("debenturistas.statusCancel")}</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                        title="Excluir"
+                        onClick={() => handleDelete(d.id, d.nome)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
                     </div>
                   </td>
                 </tr>
