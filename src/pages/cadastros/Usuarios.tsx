@@ -368,6 +368,16 @@ export default function Usuarios() {
               autoComplete="new-password"
             />
           </div>
+          <div className="flex items-center gap-2 pt-2">
+            <Checkbox
+              id="pwd-force"
+              checked={pwdForceChange}
+              onCheckedChange={(v) => setPwdForceChange(v === true)}
+            />
+            <Label htmlFor="pwd-force" className="cursor-pointer text-xs font-normal">
+              Exigir troca desta senha no próximo acesso do usuário
+            </Label>
+          </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => { setPwdUser(null); setNewPwd(""); }} disabled={pwdSaving}>Cancelar</Button>
             <Button onClick={handleResetPassword} disabled={pwdSaving}>
