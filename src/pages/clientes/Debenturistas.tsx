@@ -116,6 +116,14 @@ export default function Debenturistas() {
     qc.invalidateQueries({ queryKey: ["debenturistas"] });
   };
 
+  const handleDelete = async (id: string, nome: string) => {
+    if (!confirm(`Excluir o debenturista "${nome}"? Esta ação não pode ser desfeita.`)) return;
+    const { error } = await supabase.from("debenturistas").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("Debenturista excluído");
+    qc.invalidateQueries({ queryKey: ["debenturistas"] });
+  };
+
   const gerarTermo = async (id: string) => {
     setGerandoId(id);
     const { data, error } = await supabase
