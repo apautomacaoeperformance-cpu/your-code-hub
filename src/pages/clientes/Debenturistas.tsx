@@ -735,13 +735,8 @@ export default function Debenturistas() {
                           </Button>
                         );
                       })()}
-                      </div>
-                  </td>
-                </tr>
-              );})}
-              {filtered.length === 0 && (
-                <tr><td colSpan={6} className="py-10 text-center text-xs text-muted-foreground">{t("debenturistas.none")}</td></tr>
-              )}
+
+
                       
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
