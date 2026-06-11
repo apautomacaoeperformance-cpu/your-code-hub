@@ -338,6 +338,16 @@ export default function DebentureDetalhe() {
 
     setSalvando(true);
     try {
+      // valida data da venda
+      const dataVendaEfetiva = dataVendaInput || proximoDiaUtil(hojeIso, feriados);
+      if (!isDiaUtil(dataVendaEfetiva, feriados)) {
+        const sugerida = proximoDiaUtil(dataVendaEfetiva, feriados);
+        toast.error(`A data ${new Date(dataVendaEfetiva + "T00:00:00").toLocaleDateString()} não é dia útil. Próximo dia útil: ${new Date(sugerida + "T00:00:00").toLocaleDateString()}`);
+        setSalvando(false);
+        return;
+      }
+      const ajustada = dataVendaEfetiva !== hojeIso;
+
       // upload comprovante
       let comprovantePath: string | null = null;
       if (comprovante) {
@@ -351,9 +361,6 @@ export default function DebentureDetalhe() {
       // registra venda nas próximas N cotas disponíveis
       const cotasSelecionadas = disponiveis.slice(0, quantidade);
       const valorCota = Number(deb.valor_cota || 0);
-      const hojeIso = new Date().toISOString().slice(0, 10);
-      const dataVendaEfetiva = proximoDiaUtil(hojeIso, feriados);
-      const ajustada = dataVendaEfetiva !== hojeIso;
       const rows = cotasSelecionadas.map((c: any) => ({
         debenture_id: id,
         cota_id: c.id,
