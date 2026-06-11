@@ -173,6 +173,16 @@ export default function Usuarios() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="md:col-span-2 flex items-center gap-2 pt-1">
+              <Checkbox
+                id="must-change"
+                checked={form.must_change_password}
+                onCheckedChange={(v) => setForm({ ...form, must_change_password: v === true })}
+              />
+              <Label htmlFor="must-change" className="cursor-pointer text-xs font-normal">
+                Exigir troca de senha no próximo acesso
+              </Label>
+            </div>
             <div className="md:col-span-2 flex justify-end">
               <Button type="submit" size="sm" className="text-xs" disabled={submitting}>
                 {submitting && <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />}{t("usuarios.create")}
