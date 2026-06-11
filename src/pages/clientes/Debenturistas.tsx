@@ -78,6 +78,67 @@ export default function Debenturistas() {
     },
   });
 
+  const [enviandoZap, setEnviandoZap] = useState<string | null>(null);
+
+  const { data: zapDocs = [] } = useQuery({
+    queryKey: ["zapsign-docs"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("zapsign_documents" as any)
+        .select("debenturista_id,status,signed_file_url,sent_at,signed_at")
+        .order("sent_at", { ascending: false });
+      if (error) {
+        console.warn("zapsign_documents query:", error.message);
+        return [];
+      }
+      return data || [];
+    },
+    refetchInterval: 30000,
+  });
+
+  const zapByDeb = new Map<string, any>();
+  (zapDocs as any[]).forEach((z) => {
+    if (!zapByDeb.has(z.debenturista_id)) zapByDeb.set(z.debenturista_id, z);
+  });
+
+  const enviarParaAssinatura = async (d: any) => {
+    if (!d.email) {
+      toast.error("Debenturista sem e-mail cadastrado");
+      return;
+    }
+    setEnviandoZap(d.id);
+    try {
+      const { data: full, error } = await supabase
+        .from("debenturistas")
+        .select("id,nome,tipo,documento,rg,orgao_emissor,email,telefone,estado_civil,profissao,rua,numero,complemento,bairro,cidade,estado,cep")
+        .eq("id", d.id)
+        .maybeSingle();
+      if (error || !full) throw new Error(error?.message || "Debenturista não encontrado");
+
+      const base64 = await buildTermoInvestimentoPDFBase64(full as any);
+
+      const { data: result, error: fnErr } = await supabase.functions.invoke("zapsign-send", {
+        body: {
+          debenturista_id: d.id,
+          base64_pdf: base64,
+          signer_name: full.nome,
+          signer_email: full.email,
+          doc_name: `Termo de Investidor — ${full.nome}`,
+        },
+      });
+      if (fnErr) throw fnErr;
+      if ((result as any)?.error) throw new Error((result as any).error);
+
+      toast.success("Termo enviado para assinatura por e-mail!");
+      qc.invalidateQueries({ queryKey: ["zapsign-docs"] });
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e?.message || "Falha ao enviar para ZapSign");
+    } finally {
+      setEnviandoZap(null);
+    }
+  };
+
   const filtered = list.filter((d: any) => {
     const term = q.toLowerCase();
     return !term || [d.nome, d.documento, d.email, d.telefone].some((v: any) => (v || "").toLowerCase().includes(term));
