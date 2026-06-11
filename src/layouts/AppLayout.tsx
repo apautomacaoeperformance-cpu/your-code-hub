@@ -12,7 +12,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 const localeMap: Record<string, string> = { pt: "pt-BR", en: "en-US", es: "es-ES" };
 
 export default function AppLayout() {
-  const { user, loading, roles } = useAuth();
+  const { user, loading, roles, mustChangePassword } = useAuth();
   const { i18n } = useTranslation();
   const { pathname } = useLocation();
   const lang = i18n.resolvedLanguage || "pt";
@@ -26,6 +26,7 @@ export default function AppLayout() {
   }
 
   if (!user) return <Navigate to="/auth" replace />;
+  if (mustChangePassword) return <Navigate to="/trocar-senha" replace />;
 
   const isInvestidorOnly =
     roles.includes("investidor") &&

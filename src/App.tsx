@@ -10,6 +10,7 @@ import PdfPreviewDialog from "@/components/PdfPreviewDialog";
 
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const Auth = lazy(() => import("./pages/Auth"));
+const TrocarSenha = lazy(() => import("./pages/TrocarSenha"));
 const PainelMigracao = lazy(() => import("./pages/PainelMigracao"));
 
 
@@ -67,6 +68,7 @@ const App = () => (
           <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/auth" element={<Auth />} />
+              <Route path="/trocar-senha" element={<TrocarSenha />} />
               <Route path="/painel-migracao" element={<PainelMigracao />} />
               
               <Route element={<AppLayout />}>

@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const { email, password, full_name } = await req.json();
+    const { email, password, full_name, must_change_password } = await req.json();
     if (!email || !password) {
       return new Response(JSON.stringify({ error: "email/password obrigatórios" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -51,7 +51,12 @@ Deno.serve(async (req) => {
       userId = data.user!.id;
     }
 
-    await admin.from("profiles").upsert({ id: userId, email: normalizedEmail, full_name: full_name ?? "" });
+    await admin.from("profiles").upsert({
+      id: userId,
+      email: normalizedEmail,
+      full_name: full_name ?? "",
+      must_change_password: must_change_password ?? true,
+    });
     await admin.from("user_roles").upsert({ user_id: userId, role: "admin" }, { onConflict: "user_id,role" });
 
     return new Response(JSON.stringify({ ok: true, user_id: userId }), {

@@ -13,6 +13,8 @@ interface AuthContextValue {
   session: Session | null;
   loading: boolean;
   roles: AppRole[];
+  mustChangePassword: boolean;
+  refreshProfile: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -22,6 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
+  const [mustChangePassword, setMustChangePassword] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,9 +44,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setTimeout(async () => {
           await ensureUserSetup(newSession.user);
           await loadRoles(newSession.user.id);
+          await loadProfile(newSession.user.id);
         }, 0);
       } else {
         setRoles([]);
+        setMustChangePassword(false);
       }
     });
 
@@ -53,13 +58,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (session?.user) {
         await ensureUserSetup(session.user);
         await loadRoles(session.user.id);
+        await loadProfile(session.user.id);
       }
       setLoading(false);
     });
 
     const handleFocus = () => {
       supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session?.user) loadRoles(session.user.id);
+        if (session?.user) {
+          loadRoles(session.user.id);
+          loadProfile(session.user.id);
+        }
       });
     };
     const handleVisibility = () => {
@@ -120,12 +129,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!error && Array.isArray(data)) setRoles(data as AppRole[]);
   };
 
+  const loadProfile = async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("must_change_password" as never)
+      .eq("id", userId)
+      .maybeSingle();
+    setMustChangePassword(Boolean((data as any)?.must_change_password));
+  };
+
+  const refreshProfile = async () => {
+    if (user) await loadProfile(user.id);
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, roles, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, roles, mustChangePassword, refreshProfile, signOut }}>
       {children}
     </AuthContext.Provider>
   );
