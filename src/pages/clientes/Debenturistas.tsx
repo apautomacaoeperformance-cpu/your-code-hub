@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Pencil, Search, FileText, CalendarRange, FileSignature, Upload, Link as LinkIcon, Download, X, Eye, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Pencil, Search, FileText, CalendarRange, FileSignature, Upload, Link as LinkIcon, Download, X, Eye, ArrowUpDown, ArrowUp, ArrowDown, Send, CheckCircle2, Clock, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
@@ -24,7 +24,7 @@ import autoTable from "jspdf-autotable";
 import { previewPdf } from "@/lib/pdfPreview";
 import jhlLogo from "@/assets/jhl-logo.png";
 import { gerarRelatorioMensal, buildRelatorioMensal, gerarRelatorioMensalXlsx, buildRelatorioMensalXlsx } from "@/lib/relatorioMensal";
-import { gerarTermoInvestimentoPDF } from "@/lib/termoInvestimento";
+import { gerarTermoInvestimentoPDF, buildTermoInvestimentoPDFBase64 } from "@/lib/termoInvestimento";
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
 import { useFeriados, diasUteis as diasUteisFn } from "@/lib/diasUteis";
