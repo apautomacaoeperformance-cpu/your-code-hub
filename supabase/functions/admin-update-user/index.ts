@@ -12,6 +12,7 @@ interface Payload {
   full_name?: string;
   email?: string;
   password?: string;
+  must_change_password?: boolean;
 }
 
 Deno.serve(async (req) => {
