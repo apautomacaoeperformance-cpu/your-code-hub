@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, Building2, Trash2, FileSignature } from "lucide-react";
+import { Plus, Search, Building2, Trash2, FileSignature, Ban } from "lucide-react";
 import { gerarTermoCedentePDF } from "@/lib/termoInvestimento";
 import { maskCNPJ, maskPhone } from "@/lib/simulador/formatters";
 
@@ -179,11 +179,14 @@ export default function Cedentes() {
                       </Select>
                     </td>
                     <td className="px-4 py-2 text-right">
+                      <Button variant="outline" size="sm" className="mr-1 h-7 gap-1 px-2 text-[10px]" onClick={() => handleStatusChange(c.id, "suspenso")} title="Inativar">
+                        <Ban className="h-3 w-3" /> Inativar
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => gerarTermo(c.id)} title="Termo">
                         <FileSignature className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDelete(c.id)} className="text-destructive hover:text-destructive">
-                        <Trash2 className="h-4 w-4" />
+                      <Button variant="outline" size="sm" onClick={() => handleDelete(c.id)} className="h-7 gap-1 px-2 text-[10px] text-destructive hover:text-destructive" title="Excluir">
+                        <Trash2 className="h-3 w-3" /> Excluir
                       </Button>
                     </td>
                   </tr>
