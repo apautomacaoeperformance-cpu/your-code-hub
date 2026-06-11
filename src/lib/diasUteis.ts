@@ -53,6 +53,16 @@ export function proximoDiaUtil(from: string | Date = new Date(), feriados?: Feri
   return toIso(cur);
 }
 
+/**
+ * Verifica se uma data (yyyy-mm-dd) é dia útil.
+ * Retorna true se não for fim de semana nem feriado.
+ */
+export function isDiaUtil(iso: string, feriados?: FeriadosSet): boolean {
+  const d = new Date(iso + "T00:00:00");
+  return !isWeekend(d) && !(feriados && feriados.has(toIso(d)));
+}
+
+
 export function useFeriados() {
   return useQuery({
     queryKey: ["feriados"],
