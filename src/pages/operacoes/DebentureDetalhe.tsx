@@ -305,7 +305,11 @@ export default function DebentureDetalhe() {
   const [comprovante, setComprovante] = useState<File | null>(null);
   const [salvando, setSalvando] = useState(false);
 
+  const [dataVendaInput, setDataVendaInput] = useState<string>("");
+
   const valorTotalVenda = Number(deb?.valor_cota || 0) * (quantidade || 0);
+
+  const hojeIso = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
   const resetForm = () => {
     setDebenturistaId("");
@@ -314,7 +318,15 @@ export default function DebentureDetalhe() {
     setModoEntrada("cotas");
     setValorEntrada("");
     setComprovante(null);
+    setDataVendaInput(proximoDiaUtil(hojeIso, feriados));
   };
+
+  useEffect(() => {
+    if (openVenda) {
+      resetForm();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openVenda, feriados, hojeIso]);
 
   const handleEnviarVenda = async () => {
     if (!deb) return;
