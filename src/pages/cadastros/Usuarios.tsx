@@ -41,9 +41,12 @@ export default function Usuarios() {
   const { data: usuarios, isLoading } = useQuery({
     queryKey: ["usuarios-list"],
     queryFn: async () => {
-      const { data: profiles } = await supabase.from("profiles").select("id, full_name, email, created_at, ativo").order("created_at", { ascending: false });
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, email, created_at, ativo, must_change_password" as never)
+        .order("created_at", { ascending: false });
       const { data: rolesRows } = await supabase.from("user_roles").select("user_id, role");
-      return (profiles ?? []).map((p) => ({
+      return ((profiles ?? []) as any[]).map((p) => ({
         ...p,
         roles: (rolesRows ?? []).filter((r) => r.user_id === p.id).map((r) => r.role as AppRole),
       }));
@@ -61,6 +64,13 @@ export default function Usuarios() {
     setSubmitting(false);
     if (error || (data as any)?.error) {
       return toast.error((data as any)?.error ?? error?.message ?? t("usuarios.createError"));
+    }
+    if ((data as any)?.user_id) {
+      const { error: flagError } = await supabase
+        .from("profiles")
+        .update({ must_change_password: form.must_change_password } as never)
+        .eq("id", (data as any).user_id);
+      if (flagError) return toast.error(flagError.message);
     }
     toast.success(t("usuarios.createSuccess"));
     setForm({ full_name: "", email: "", password: "", role: "operador", must_change_password: true });
@@ -130,6 +140,11 @@ export default function Usuarios() {
     if (error || (data as any)?.error) {
       return toast.error((data as any)?.error ?? error?.message ?? "Falha ao redefinir senha");
     }
+    const { error: flagError } = await supabase
+      .from("profiles")
+      .update({ must_change_password: pwdForceChange } as never)
+      .eq("id", pwdUser.id);
+    if (flagError) return toast.error(flagError.message);
     toast.success("Senha redefinida");
     setPwdUser(null);
     setNewPwd("");
@@ -216,6 +231,7 @@ export default function Usuarios() {
                   const currentRole = u.roles[0] ?? "operador";
                   const isSelf = u.id === user?.id;
                   const ativo = (u as any).ativo ?? true;
+                  const mustChangePassword = Boolean((u as any).must_change_password);
                   return (
                     <TableRow key={u.id} className={!ativo ? "opacity-60" : ""}>
                       <TableCell className="py-2 text-xs">{u.full_name || "—"}</TableCell>
@@ -246,12 +262,13 @@ export default function Usuarios() {
                         {isSelf && <p className="mt-1 text-[10px] text-muted-foreground">{t("usuarios.cannotSelf")}</p>}
                       </TableCell>
                       <TableCell className="py-2">
-                        <div className="flex items-center justify-center">
+                        <div className="flex flex-col items-center justify-center gap-1">
                           <Switch
                             checked={ativo}
                             disabled={isSelf || updatingId === u.id}
                             onCheckedChange={(v) => handleToggleAtivo(u.id, v)}
                           />
+                          {mustChangePassword && <Badge variant="outline" className="text-[9px]">Trocar senha</Badge>}
                         </div>
                       </TableCell>
                       <TableCell className="px-0 py-2 text-center">
