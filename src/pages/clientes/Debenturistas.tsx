@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Pencil, Search, FileText, CalendarRange, FileSignature, Upload, Link as LinkIcon, Download, X, Eye, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Pencil, Search, FileText, CalendarRange, FileSignature, Upload, Link as LinkIcon, Download, X, Eye, ArrowUpDown, ArrowUp, ArrowDown, Send, CheckCircle2, Clock, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
@@ -24,7 +24,7 @@ import autoTable from "jspdf-autotable";
 import { previewPdf } from "@/lib/pdfPreview";
 import jhlLogo from "@/assets/jhl-logo.png";
 import { gerarRelatorioMensal, buildRelatorioMensal, gerarRelatorioMensalXlsx, buildRelatorioMensalXlsx } from "@/lib/relatorioMensal";
-import { gerarTermoInvestimentoPDF } from "@/lib/termoInvestimento";
+import { gerarTermoInvestimentoPDF, buildTermoInvestimentoPDFBase64 } from "@/lib/termoInvestimento";
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
 import { useFeriados, diasUteis as diasUteisFn } from "@/lib/diasUteis";
@@ -77,6 +77,67 @@ export default function Debenturistas() {
       return data ?? [];
     },
   });
+
+  const [enviandoZap, setEnviandoZap] = useState<string | null>(null);
+
+  const { data: zapDocs = [] } = useQuery({
+    queryKey: ["zapsign-docs"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("zapsign_documents" as any)
+        .select("debenturista_id,status,signed_file_url,sent_at,signed_at")
+        .order("sent_at", { ascending: false });
+      if (error) {
+        console.warn("zapsign_documents query:", error.message);
+        return [];
+      }
+      return data || [];
+    },
+    refetchInterval: 30000,
+  });
+
+  const zapByDeb = new Map<string, any>();
+  (zapDocs as any[]).forEach((z) => {
+    if (!zapByDeb.has(z.debenturista_id)) zapByDeb.set(z.debenturista_id, z);
+  });
+
+  const enviarParaAssinatura = async (d: any) => {
+    if (!d.email) {
+      toast.error("Debenturista sem e-mail cadastrado");
+      return;
+    }
+    setEnviandoZap(d.id);
+    try {
+      const { data: full, error } = await supabase
+        .from("debenturistas")
+        .select("id,nome,tipo,documento,rg,orgao_emissor,email,telefone,estado_civil,profissao,rua,numero,complemento,bairro,cidade,estado,cep")
+        .eq("id", d.id)
+        .maybeSingle();
+      if (error || !full) throw new Error(error?.message || "Debenturista não encontrado");
+
+      const base64 = await buildTermoInvestimentoPDFBase64(full as any);
+
+      const { data: result, error: fnErr } = await supabase.functions.invoke("zapsign-send", {
+        body: {
+          debenturista_id: d.id,
+          base64_pdf: base64,
+          signer_name: full.nome,
+          signer_email: full.email,
+          doc_name: `Termo de Investidor — ${full.nome}`,
+        },
+      });
+      if (fnErr) throw fnErr;
+      if ((result as any)?.error) throw new Error((result as any).error);
+
+      toast.success("Termo enviado para assinatura por e-mail!");
+      qc.invalidateQueries({ queryKey: ["zapsign-docs"] });
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e?.message || "Falha ao enviar para ZapSign");
+    } finally {
+      setEnviandoZap(null);
+    }
+  };
 
   const filtered = list.filter((d: any) => {
     const term = q.toLowerCase();
@@ -638,6 +699,44 @@ export default function Debenturistas() {
                       >
                         <FileSignature className="h-3 w-3" />
                       </Button>
+
+                      {(() => {
+                        const zap = zapByDeb.get(d.id);
+                        const sending = enviandoZap === d.id;
+                        const status = zap?.status;
+                        const title = !zap ? "Enviar para assinatura (ZapSign)"
+                          : status === "signed" ? "Termo assinado via ZapSign"
+                          : status === "refused" ? "Cliente recusou — reenviar"
+                          : "Aguardando assinatura — reenviar";
+                        const Icon = status === "signed" ? CheckCircle2
+                          : status === "refused" ? XCircle
+                          : status === "pending" ? Clock
+                          : Send;
+                        const colorClass = status === "signed" ? "text-success"
+                          : status === "refused" ? "text-destructive"
+                          : status === "pending" ? "text-warning"
+                          : "";
+                        return (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className={`h-7 w-7 p-0 ${colorClass}`}
+                            title={title}
+                            disabled={sending}
+                            onClick={() => {
+                              if (status === "signed" && zap?.signed_file_url) {
+                                window.open(zap.signed_file_url, "_blank");
+                              } else {
+                                enviarParaAssinatura(d);
+                              }
+                            }}
+                          >
+                            <Icon className="h-3 w-3" />
+                          </Button>
+                        );
+                      })()}
+
+
                       
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
