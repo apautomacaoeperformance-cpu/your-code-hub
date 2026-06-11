@@ -63,6 +63,7 @@ export function AppSidebar() {
     { title: t("sidebar.permissoes"), url: "/admin/permissoes" },
     { title: t("sidebar.logsAcesso"), url: "/admin/logs-acesso" },
     { title: t("sidebar.usuarios"), url: "/usuarios" },
+    { title: "Painel de Migração", url: "/painel-migracao" },
   ];
   const isInvestidorOnly =
     roles.includes("investidor") &&
@@ -87,7 +88,7 @@ export function AppSidebar() {
   const [clientesOpen, setClientesOpen] = useState(clientesActive);
   const financeiroActive = pathname.startsWith("/financeiro");
   const [financeiroOpen, setFinanceiroOpen] = useState(financeiroActive);
-  const adminActive = (pathname.startsWith("/admin") && pathname !== "/admin/calculadora") || pathname === "/usuarios";
+  const adminActive = (pathname.startsWith("/admin") && pathname !== "/admin/calculadora") || pathname === "/usuarios" || pathname === "/painel-migracao";
   const [adminOpen, setAdminOpen] = useState(adminActive);
   const menuButtonClassName = collapsed ? "mx-auto justify-center" : "";
   const menuLinkClassName = collapsed ? "flex items-center justify-center" : "flex items-center gap-3";
