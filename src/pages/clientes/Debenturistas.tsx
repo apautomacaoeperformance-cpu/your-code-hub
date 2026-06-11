@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Pencil, Search, FileText, CalendarRange, FileSignature, Upload, Link as LinkIcon, Download, X, Eye, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Pencil, Search, FileText, CalendarRange, FileSignature, Upload, Link as LinkIcon, Download, X, Eye, ArrowUpDown, ArrowUp, ArrowDown, Trash2, Ban } from "lucide-react";
 import { toast } from "sonner";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
