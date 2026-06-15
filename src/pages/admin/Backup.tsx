@@ -1,18 +1,64 @@
 import { useState } from "react";
+import JSZip from "jszip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Database, Download, Loader2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+function csvEscape(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  let str: string;
+  if (typeof value === "object") {
+    try { str = JSON.stringify(value); } catch { str = String(value); }
+  } else {
+    str = String(value);
+  }
+  if (/[",\n\r]/.test(str)) return `"${str.replace(/"/g, '""')}"`;
+  return str;
+}
+
+function toCsv(rows: Record<string, unknown>[]): string {
+  if (!rows || rows.length === 0) return "";
+  const headers = Array.from(
+    rows.reduce<Set<string>>((acc, r) => {
+      Object.keys(r).forEach((k) => acc.add(k));
+      return acc;
+    }, new Set<string>()),
+  );
+  const lines = [headers.join(",")];
+  for (const row of rows) {
+    lines.push(headers.map((h) => csvEscape(row[h])).join(","));
+  }
+  return lines.join("\n");
+}
+
+async function listPublicTables(): Promise<string[]> {
+  // Usa o OpenAPI spec do PostgREST para descobrir tabelas expostas no schema public
+  const url = (supabase as unknown as { supabaseUrl: string }).supabaseUrl;
+  const key = (supabase as unknown as { supabaseKey: string }).supabaseKey;
+  const res = await fetch(`${url}/rest/v1/`, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` },
+  });
+  if (!res.ok) throw new Error(`Falha ao listar tabelas: HTTP ${res.status}`);
+  const spec = await res.json();
+  let names: string[] = [];
+  if (spec?.definitions) names = Object.keys(spec.definitions);
+  else if (spec?.paths) {
+    names = Object.keys(spec.paths)
+      .filter((p: string) => /^\/[A-Za-z0-9_]+$/.test(p))
+      .map((p: string) => p.slice(1));
+  }
+  return names.sort();
+}
 
 export default function Backup() {
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState<string>("");
 
   async function gerarBackup() {
     setLoading(true);
+    setProgress("Listando tabelas...");
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
@@ -20,22 +66,51 @@ export default function Backup() {
         return;
       }
 
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/backup-database`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          apikey: ANON_KEY,
-        },
-      });
+      const tables = await listPublicTables();
+      if (tables.length === 0) throw new Error("Nenhuma tabela encontrada.");
 
-      if (!res.ok) {
-        const text = await res.text();
-        let msg = text;
-        try { msg = JSON.parse(text).error ?? text; } catch { /* ignore */ }
-        throw new Error(msg || `Erro ${res.status}`);
+      const zip = new JSZip();
+      const manifest: { table: string; rows: number; error?: string }[] = [];
+
+      for (let i = 0; i < tables.length; i++) {
+        const table = tables[i];
+        setProgress(`Exportando ${i + 1}/${tables.length}: ${table}`);
+        try {
+          const pageSize = 1000;
+          let from = 0;
+          const all: Record<string, unknown>[] = [];
+          // eslint-disable-next-line no-constant-condition
+          while (true) {
+            const { data, error } = await supabase
+              .from(table as never)
+              .select("*")
+              .range(from, from + pageSize - 1);
+            if (error) throw error;
+            if (!data || data.length === 0) break;
+            all.push(...(data as Record<string, unknown>[]));
+            if (data.length < pageSize) break;
+            from += pageSize;
+          }
+          zip.file(`${table}.csv`, toCsv(all));
+          manifest.push({ table, rows: all.length });
+        } catch (e) {
+          const msg = (e as Error).message;
+          zip.file(`${table}.error.txt`, msg);
+          manifest.push({ table, rows: 0, error: msg });
+        }
       }
 
-      const blob = await res.blob();
+      zip.file(
+        "manifest.json",
+        JSON.stringify(
+          { generated_at: new Date().toISOString(), tables: manifest },
+          null,
+          2,
+        ),
+      );
+
+      setProgress("Compactando arquivo...");
+      const blob = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
       const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -51,6 +126,7 @@ export default function Backup() {
       toast.error(`Falha ao gerar backup: ${(e as Error).message}`);
     } finally {
       setLoading(false);
+      setProgress("");
     }
   }
 
@@ -74,22 +150,23 @@ export default function Backup() {
           <p className="text-sm text-muted-foreground">
             O backup inclui um arquivo <code>.csv</code> por tabela do schema
             <code> public</code>, além de um <code>manifest.json</code> com a
-            contagem de linhas exportadas. Apenas administradores podem executar
-            esta operação.
+            contagem de linhas exportadas. Os dados retornados respeitam as
+            permissões (RLS) do usuário atualmente logado.
           </p>
 
           <div className="flex items-start gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-sm">
             <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
             <div>
-              Para bases muito grandes, a geração pode levar alguns minutos.
-              Mantenha a aba aberta durante o processo.
+              Para bases grandes, a geração pode levar alguns minutos. Mantenha
+              a aba aberta durante o processo.
             </div>
           </div>
 
           <Button size="lg" onClick={gerarBackup} disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Gerando backup...
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {progress || "Gerando backup..."}
               </>
             ) : (
               <>
