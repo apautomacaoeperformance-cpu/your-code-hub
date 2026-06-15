@@ -63,6 +63,7 @@ export function AppSidebar() {
     { title: t("sidebar.permissoes"), url: "/admin/permissoes" },
     { title: t("sidebar.logsAcesso"), url: "/admin/logs-acesso" },
     { title: t("sidebar.usuarios"), url: "/usuarios" },
+    { title: "Backup", url: "/admin/backup" },
   ];
   const isInvestidorOnly =
     roles.includes("investidor") &&

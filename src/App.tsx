@@ -49,6 +49,7 @@ const TaxaCDI = lazy(() => import("./pages/admin/TaxaCDI"));
 const AuditoriaCDI = lazy(() => import("./pages/admin/AuditoriaCDI"));
 const LogsAcesso = lazy(() => import("./pages/admin/LogsAcesso"));
 const Configuracoes = lazy(() => import("./pages/admin/Configuracoes"));
+const Backup = lazy(() => import("./pages/admin/Backup"));
 
 const queryClient = new QueryClient();
 
@@ -107,6 +108,7 @@ const App = () => (
                 <Route path="/admin/auditoria-cdi" element={<AuditoriaCDI />} />
                 <Route path="/admin/logs-acesso" element={<LogsAcesso />} />
                 <Route path="/admin/configuracoes" element={<Configuracoes />} />
+                <Route path="/admin/backup" element={<Backup />} />
                 <Route path="/cedentes" element={<Cedentes />} />
                 <Route path="/sacados" element={<Sacados />} />
                 <Route path="/usuarios" element={<Usuarios />} />
