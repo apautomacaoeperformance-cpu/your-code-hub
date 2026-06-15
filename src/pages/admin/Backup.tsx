@@ -33,23 +33,30 @@ function toCsv(rows: Record<string, unknown>[]): string {
   return lines.join("\n");
 }
 
+const PUBLIC_TABLES = [
+  "access_logs",
+  "app_parameters",
+  "caixas",
+  "cdi_auditoria",
+  "cdi_diario",
+  "cedentes",
+  "cotas_debenture",
+  "debentures",
+  "debenturistas",
+  "feriados",
+  "informes_rendimento",
+  "integrations_log",
+  "operacoes",
+  "profiles",
+  "rendimentos_debenture",
+  "retiradas_debenture",
+  "sacados",
+  "user_roles",
+  "vendas_debenture",
+].sort();
+
 async function listPublicTables(): Promise<string[]> {
-  // Usa o OpenAPI spec do PostgREST para descobrir tabelas expostas no schema public
-  const url = (supabase as unknown as { supabaseUrl: string }).supabaseUrl;
-  const key = (supabase as unknown as { supabaseKey: string }).supabaseKey;
-  const res = await fetch(`${url}/rest/v1/`, {
-    headers: { apikey: key, Authorization: `Bearer ${key}` },
-  });
-  if (!res.ok) throw new Error(`Falha ao listar tabelas: HTTP ${res.status}`);
-  const spec = await res.json();
-  let names: string[] = [];
-  if (spec?.definitions) names = Object.keys(spec.definitions);
-  else if (spec?.paths) {
-    names = Object.keys(spec.paths)
-      .filter((p: string) => /^\/[A-Za-z0-9_]+$/.test(p))
-      .map((p: string) => p.slice(1));
-  }
-  return names.sort();
+  return PUBLIC_TABLES;
 }
 
 export default function Backup() {
