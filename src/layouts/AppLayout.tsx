@@ -68,25 +68,24 @@ export default function AppLayout() {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-gradient-subtle">
+      <div className="flex min-h-dvh w-full bg-gradient-subtle">
         <AppSidebar />
         <div className="relative z-0 flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur-md">
+          <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b border-border/70 bg-background/85 px-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
             <SidebarTrigger />
             <div className="ml-auto flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">
+              <span className="hidden sm:inline text-[11px] font-medium tracking-wide text-muted-foreground tabular-nums">
                 {new Date().toLocaleDateString(localeMap[lang] ?? "pt-BR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}
               </span>
               <LanguageSwitcher />
               <ThemeToggle />
             </div>
           </header>
-          <main className="relative z-0 flex-1 p-6 lg:p-8">
+          <main key={pathname} className="relative z-0 flex-1 p-4 lg:p-6 animate-fade-in">
             <Outlet />
           </main>
         </div>
       </div>
-      {/* PdfPreviewDialog is now global in App.tsx */}
     </SidebarProvider>
   );
 }
