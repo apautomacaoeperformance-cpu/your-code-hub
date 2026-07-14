@@ -15,13 +15,34 @@ function fmtBR(d: Date) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
-  try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
 
-    // Determina a data inicial: última data em cdi_diario + 1, ou últimos 3 anos
+  const startedAt = new Date();
+  // Cria registro "running"
+  const { data: logRow } = await supabase
+    .from("sync_cdi_execucoes")
+    .insert({ iniciado_em: startedAt.toISOString(), status: "running" })
+    .select("id")
+    .maybeSingle();
+  const logId = logRow?.id as string | undefined;
+
+  const finalize = async (patch: Record<string, unknown>) => {
+    if (!logId) return;
+    const finishedAt = new Date();
+    await supabase
+      .from("sync_cdi_execucoes")
+      .update({
+        finalizado_em: finishedAt.toISOString(),
+        duracao_ms: finishedAt.getTime() - startedAt.getTime(),
+        ...patch,
+      })
+      .eq("id", logId);
+  };
+
+  try {
     const { data: last } = await supabase
       .from("cdi_diario")
       .select("data")
@@ -30,13 +51,10 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     const today = new Date();
-    // Janela de re-sincronização: sempre re-busca os últimos N dias para capturar
-    // republicações/correções do BCB (backfill automático via upsert).
     const BACKFILL_DAYS = 10;
     let start: Date;
     if (last?.data) {
       start = new Date(last.data + "T00:00:00");
-      // Recua N dias a partir da última data salva para sobrescrever correções recentes
       start.setDate(start.getDate() - BACKFILL_DAYS);
     } else {
       start = new Date(today);
@@ -44,16 +62,16 @@ Deno.serve(async (req) => {
     }
 
     if (start > today) {
+      await finalize({ status: "noop", inseridos: 0, mensagem: "Already up to date" });
       return new Response(JSON.stringify({ ok: true, inserted: 0, message: "Already up to date" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // BCB SGS série 12 = CDI diário (% a.d.)
     const url = `https://api.bcb.gov.br/dados/serie/bcdata.sgs.12/dados?formato=json&dataInicial=${fmtBR(start)}&dataFinal=${fmtBR(today)}`;
     const resp = await fetch(url);
-    // BCB retorna 404 quando não há dados publicados no intervalo (fins de semana, feriados, ou dia ainda não publicado)
     if (resp.status === 404) {
+      await finalize({ status: "noop", inseridos: 0, mensagem: "Nenhum dado novo publicado pelo BCB no intervalo" });
       return new Response(JSON.stringify({ ok: true, inserted: 0, message: "Nenhum dado novo publicado pelo BCB no intervalo" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -65,6 +83,7 @@ Deno.serve(async (req) => {
     const rows: { data: string; valor: string }[] = await resp.json();
 
     if (!rows.length) {
+      await finalize({ status: "noop", inseridos: 0, mensagem: "Sem linhas retornadas" });
       return new Response(JSON.stringify({ ok: true, inserted: 0 }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -75,9 +94,6 @@ Deno.serve(async (req) => {
       return { data: `${y}-${m}-${d}`, taxa: Number(r.valor) };
     });
 
-    // Identifica datas que já pertencem a meses consolidados — não devem ser sobrescritas
-    // (alterações nessas datas geram registro em cdi_auditoria sem afetar histórico contábil).
-    const datas = records.map((r) => r.data);
     const { data: rendConsolidados } = await supabase
       .from("rendimentos_debenture")
       .select("data_competencia")
@@ -98,7 +114,6 @@ Deno.serve(async (req) => {
       if (error) throw error;
     }
 
-    // Para datas em meses consolidados, faz insert apenas se não existir (não sobrescreve).
     if (protegidos.length > 0) {
       const { data: jaExistem } = await supabase
         .from("cdi_diario")
@@ -112,11 +127,22 @@ Deno.serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ ok: true, inserted: records.length, from: records[0].data, to: records[records.length - 1].data }), {
+    const from = records[0].data;
+    const to = records[records.length - 1].data;
+    await finalize({
+      status: "success",
+      inseridos: records.length,
+      periodo_de: from,
+      periodo_ate: to,
+      mensagem: `${atualizaveis.length} atualizáveis, ${protegidos.length} protegidos`,
+    });
+
+    return new Response(JSON.stringify({ ok: true, inserted: records.length, from, to }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e: any) {
     console.error("sync-cdi error", e);
+    await finalize({ status: "error", erro: e?.message ?? String(e) });
     return new Response(JSON.stringify({ ok: false, error: e?.message ?? String(e) }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
