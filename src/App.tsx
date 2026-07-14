@@ -107,6 +107,7 @@ const App = () => (
                 <Route path="/admin/feriados" element={<Feriados />} />
                 <Route path="/admin/taxa-cdi" element={<TaxaCDI />} />
                 <Route path="/admin/auditoria-cdi" element={<AuditoriaCDI />} />
+                <Route path="/admin/sync-cdi-status" element={<SyncCdiStatus />} />
                 <Route path="/admin/logs-acesso" element={<LogsAcesso />} />
                 <Route path="/admin/configuracoes" element={<Configuracoes />} />
                 <Route path="/admin/backup" element={<Backup />} />
