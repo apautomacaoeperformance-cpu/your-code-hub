@@ -47,6 +47,7 @@ const Calculadora = lazy(() => import("./pages/admin/Calculadora"));
 const Feriados = lazy(() => import("./pages/admin/Feriados"));
 const TaxaCDI = lazy(() => import("./pages/admin/TaxaCDI"));
 const AuditoriaCDI = lazy(() => import("./pages/admin/AuditoriaCDI"));
+const SyncCdiStatus = lazy(() => import("./pages/admin/SyncCdiStatus"));
 const LogsAcesso = lazy(() => import("./pages/admin/LogsAcesso"));
 const Configuracoes = lazy(() => import("./pages/admin/Configuracoes"));
 const Backup = lazy(() => import("./pages/admin/Backup"));
