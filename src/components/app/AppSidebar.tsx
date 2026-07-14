@@ -57,6 +57,7 @@ export function AppSidebar() {
     { title: t("sidebar.parametros"), url: "/admin/parametros" },
     { title: t("sidebar.feriados"), url: "/admin/feriados" },
     { title: t("sidebar.taxaCdi"), url: "/admin/taxa-cdi" },
+    { title: "Sync BCB — Status", url: "/admin/sync-cdi-status" },
     { title: t("sidebar.cessionaria"), url: "/admin/cessionaria" },
     { title: t("sidebar.fornecedores"), url: "/admin/fornecedores" },
     { title: t("sidebar.despesas"), url: "/admin/despesas" },
